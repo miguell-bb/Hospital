@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Atendimento</title>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Atendimento</h2>
+
+    <input id="nome" placeholder="Nome">
+
+    <input id="cpf" placeholder="CPF">
+
+    <input id="data" placeholder="Data de nascimento">
+
+    <input id="sexo" placeholder="Sexo">
+
+    <input id="nomeMae" placeholder="Nome da mãe">
+
+    <input id="estadoCivil" placeholder="Estado civil">
+
+    <input id="endereco" placeholder="Endereço">
+
+    <input id="telefone" placeholder="Telefone">
+
+    <input id="email" placeholder="E-mail">
+
+    <input id="contato" placeholder="Contato de emergência">
+
+    <select id="tipo">
+        <option value="Convenio">Convênio</option>
+        <option value="Particular">Particular</option>
+    </select>
+
+    <input type="file" id="foto">
+
+    <button onclick="cadastrar()">Cadastrar</button>
+
+</div>
+
+<script>
+
+async function cadastrar() {
+
+    const paciente = {
+        nome: document.getElementById("nome").value,
+        cpf: document.getElementById("cpf").value,
+        data: document.getElementById("data").value,
+        sexo: document.getElementById("sexo").value,
+        nomeMae: document.getElementById("nomeMae").value,
+        estadoCivil: document.getElementById("estadoCivil").value,
+        endereco: document.getElementById("endereco").value,
+        telefone: document.getElementById("telefone").value,
+        email: document.getElementById("email").value,
+        contato: document.getElementById("contato").value,
+        tipo: document.getElementById("tipo").value
+    };
+
+    if (!paciente.nome || !paciente.cpf) {
+        alert("Preencha pelo menos o nome e o CPF do paciente.");
+        return;
+    }
+
+    try {
+
+        const resposta = await fetch("/atendimento", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(paciente)
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+            throw new Error(dados.erro || "Erro ao cadastrar paciente.");
+        }
+
+        alert("Paciente cadastrado e enviado para a triagem!");
+
+        document.getElementById("nome").value = "";
+        document.getElementById("cpf").value = "";
+        document.getElementById("data").value = "";
+        document.getElementById("sexo").value = "";
+        document.getElementById("nomeMae").value = "";
+        document.getElementById("estadoCivil").value = "";
+        document.getElementById("endereco").value = "";
+        document.getElementById("telefone").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("contato").value = "";
+        document.getElementById("tipo").value = "Convenio";
+        document.getElementById("foto").value = "";
+
+    } catch (erro) {
+
+        console.error("Erro:", erro);
+
+        alert("Não foi possível cadastrar o paciente. Verifique se o servidor está funcionando.");
+
+    }
+}
+
+</script>
+
+</body>
+</html>

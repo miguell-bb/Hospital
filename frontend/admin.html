@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin - Cadastro de Usuários</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 30px 16px;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(0, 188, 212, .12), transparent 30%),
+                linear-gradient(135deg, #06121f, #0b1f33 55%, #071421);
+            color: #17324d;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            margin: 20px auto;
+            padding: 35px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 25px 65px rgba(0, 0, 0, .3);
+        }
+
+        .voltar {
+            display: inline-block;
+            margin-bottom: 22px;
+            color: #087f9c;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .voltar:hover {
+            text-decoration: underline;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #102a43;
+            font-size: 25px;
+        }
+
+        h3 {
+            margin: 25px 0 15px;
+            color: #102a43;
+        }
+
+        label {
+            display: block;
+            margin: 0 0 7px;
+            color: #34495e;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input, select {
+            display: block;
+            width: 100%;
+            min-height: 49px;
+            margin-bottom: 17px;
+            padding: 12px 14px;
+            border: 1px solid #d8e2ea;
+            border-radius: 10px;
+            background: #f7fafc;
+            color: #17324d;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #0797b5;
+            box-shadow: 0 0 0 3px rgba(7, 151, 181, .12);
+        }
+
+        button {
+            min-height: 48px;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #087f9c, #176fc1);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter .2s, transform .2s;
+        }
+
+        button:hover {
+            filter: brightness(1.08);
+        }
+
+        button:active {
+            transform: scale(.99);
+        }
+
+        button:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+        }
+
+        #btnCadastrar {
+            width: 100%;
+        }
+
+        .mensagem {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 9px;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .mensagem.sucesso {
+            display: block;
+            background: #e8f7ee;
+            color: #176534;
+        }
+
+        .mensagem.erro {
+            display: block;
+            background: #fdecec;
+            color: #a32121;
+        }
+
+        hr {
+            margin: 28px 0;
+            border: none;
+            border-top: 1px solid #e1e8ef;
+        }
+
+        .lista {
+            display: grid;
+            gap: 12px;
+        }
+
+        .card {
+            padding: 15px;
+            border: 1px solid #e1e8ef;
+            border-left: 4px solid #0797b5;
+            border-radius: 10px;
+            background: #f8fbfd;
+            overflow-wrap: anywhere;
+        }
+
+        .card strong {
+            color: #102a43;
+        }
+
+        .vazio {
+            padding: 15px;
+            color: #687b8c;
+            text-align: center;
+            background: #f7fafc;
+            border-radius: 10px;
+        }
+
+        .atualizar {
+            margin-bottom: 15px;
+            background: #e8f4fa;
+            color: #126080;
+            font-size: 13px;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <a class="voltar" href="index.html">
+            &#8592; Voltar para o Login
+        </a>
+
+        <h2>🏥 Cadastrar Usuário</h2>
+
+        <form id="formUsuario">
+
+            <label for="usuario">Nome de usuário (login)</label>
+            <input
+                type="text"
+                id="usuario"
+                name="usuario"
+                placeholder="Digite o nome de usuário"
+                autocomplete="username"
+                required
+                maxlength="50"
+            >
+
+            <label for="senha">Senha</label>
+            <input
+                type="password"
+                id="senha"
+                name="senha"
+                placeholder="Digite a senha"
+                autocomplete="new-password"
+                required
+                minlength="1"
+            >
+
+            <label for="tipo">Setor de atendimento</label>
+            <select id="tipo" name="tipo" required>
+                <option value="">Selecione o setor</option>
+                <option value="atendimento">Atendimento</option>
+                <option value="triagem">Triagem</option>
+                <option value="medico">Médico</option>
+            </select>
+
+            <button type="submit" id="btnCadastrar">
+                Cadastrar Usuário
+            </button>
+
+            <div
+                id="mensagem"
+                class="mensagem"
+                role="status"
+                aria-live="polite"
+            ></div>
+
+        </form>
+
+        <hr>
+
+        <h3>📋 Usuários Cadastrados</h3>
+
+        <button
+            type="button"
+            id="btnAtualizar"
+            class="atualizar"
+        >
+            Atualizar lista
+        </button>
+
+        <div id="listaUsuario" class="lista">
+            <p class="vazio">Carregando usuários...</p>
+        </div>
+
+    </main>
+
+    <script>
+        const form = document.getElementById("formUsuario");
+        const campoUsuario = document.getElementById("usuario");
+        const campoSenha = document.getElementById("senha");
+        const campoTipo = document.getElementById("tipo");
+        const btnCadastrar = document.getElementById("btnCadastrar");
+        const btnAtualizar = document.getElementById("btnAtualizar");
+        const mensagem = document.getElementById("mensagem");
+        const listaUsuario = document.getElementById("listaUsuario");
+
+        function mostrarMensagem(texto, tipo) {
+            mensagem.textContent = texto;
+            mensagem.className = "mensagem " + tipo;
+        }
+
+        function limparMensagem() {
+            mensagem.textContent = "";
+            mensagem.className = "mensagem";
+        }
+
+        // Cadastrar usuário no server.js
+        form.addEventListener("submit", async function(evento) {
+            evento.preventDefault();
+            limparMensagem();
+
+            const usuario = campoUsuario.value.trim();
+            const senha = campoSenha.value;
+            const tipo = campoTipo.value;
+
+            if (!usuario || !senha || !tipo) {
+                mostrarMensagem(
+                    "Preencha todos os campos antes de cadastrar.",
+                    "erro"
+                );
+                return;
+            }
+
+            btnCadastrar.disabled = true;
+            btnCadastrar.textContent = "Salvando...";
+
+            try {
+                const resposta = await fetch("/usuarios", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        usuario: usuario,
+                        senha: senha,
+                        tipo: tipo
+                    })
+                });
+
+                const dados = await resposta.json();
+
+                if (!resposta.ok) {
+                    throw new Error(
+                        dados.erro || "Não foi possível cadastrar o usuário."
+                    );
+                }
+
+                mostrarMensagem(
+                    dados.mensagem || "Usuário cadastrado com sucesso!",
+                    "sucesso"
+                );
+
+                form.reset();
+
+                await carregarUsuarios();
+
+            } catch (erro) {
+                console.error("Erro no cadastro:", erro);
+
+                mostrarMensagem(
+                    erro.message === "Failed to fetch"
+                        ? "Não foi possível conectar ao servidor. Verifique se o server.js está rodando."
+                        : erro.message || "Ocorreu um erro ao cadastrar.",
+                    "erro"
+                );
+
+            } finally {
+                btnCadastrar.disabled = false;
+                btnCadastrar.textContent = "Cadastrar Usuário";
+            }
+        });
+
+        // Buscar os usuários salvos no servidor
+        async function carregarUsuarios() {
+            btnAtualizar.disabled = true;
+            btnAtualizar.textContent = "Carregando...";
+
+            try {
+                const resposta = await fetch("/usuarios");
+
+                if (!resposta.ok) {
+                    throw new Error("Erro HTTP " + resposta.status);
+                }
+
+                const usuarios = await resposta.json();
+
+                listaUsuario.replaceChildren();
+
+                if (!Array.isArray(usuarios) || usuarios.length === 0) {
+                    const vazio = document.createElement("p");
+                    vazio.className = "vazio";
+                    vazio.textContent = "Nenhum usuário cadastrado.";
+                    listaUsuario.appendChild(vazio);
+                    return;
+                }
+
+                usuarios.forEach(function(usuario) {
+                    const card = document.createElement("div");
+                    card.className = "card";
+
+                    const nome = document.createElement("div");
+                    const nomeLabel = document.createElement("strong");
+                    nomeLabel.textContent = "Usuário: ";
+                    nome.append(nomeLabel);
+                    nome.append(
+                        document.createTextNode(usuario.usuario || "")
+                    );
+
+                    const setor = document.createElement("div");
+                    const setorLabel = document.createElement("strong");
+                    setorLabel.textContent = "Setor: ";
+                    setor.append(setorLabel);
+                    setor.append(
+                        document.createTextNode(usuario.tipo || "")
+                    );
+
+                    card.append(nome, setor);
+                    listaUsuario.appendChild(card);
+                });
+
+            } catch (erro) {
+                console.error("Erro ao carregar usuários:", erro);
+
+                listaUsuario.replaceChildren();
+
+                const aviso = document.createElement("p");
+                aviso.className = "vazio";
+                aviso.textContent =
+                    "Não foi possível carregar os usuários. Verifique o servidor.";
+                listaUsuario.appendChild(aviso);
+
+            } finally {
+                btnAtualizar.disabled = false;
+                btnAtualizar.textContent = "Atualizar lista";
+            }
+        }
+
+        btnAtualizar.addEventListener("click", carregarUsuarios);
+
+        // Carregar a lista ao abrir a página
+        carregarUsuarios();
+    </script>
+
+</body>
+</html>

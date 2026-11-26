@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <title>Medicações Prescritas - Sentinela</title>
+</head>
+<body>
+  <div class="container">
+    <h2>💊 Medicações Prescritas</h2>
+    <div id="listaMedicacoes">Carregando...</div>
+  </div>
+
+  <script>
+    async function carregarMedicacoesPrescritas() {
+      const div = document.getElementById("listaMedicacoes");
+
+      try {
+        const resposta = await fetch("/medicacoes");
+
+        if (!resposta.ok) {
+          throw new Error("Não foi possível carregar as medicações.");
+        }
+
+        const dados = await resposta.json();
+        div.replaceChildren();
+
+        const consultas = dados.filter(c =>
+          c.paciente && c.medicacao
+        );
+
+        if (consultas.length === 0) {
+          div.textContent = "Nenhuma medicação prescrita encontrada.";
+          return;
+        }
+
+        consultas.slice().reverse().forEach(c => {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          const titulo = document.createElement("h3");
+          titulo.textContent = c.paciente;
+
+          const medicacao = document.createElement("p");
+          medicacao.textContent = "Medicação: " + c.medicacao;
+
+          const diagnostico = document.createElement("p");
+          diagnostico.textContent =
+            "Diagnóstico: " + (c.diagnostico || "Não informado");
+
+          const observacoes = document.createElement("p");
+          observacoes.textContent =
+            "Observações: " + (c.obs || "Nenhuma");
+
+          card.append(titulo, medicacao, diagnostico, observacoes);
+          div.appendChild(card);
+        });
+      } catch (erro) {
+        console.error("Erro ao carregar medicações:", erro);
+        div.textContent = "Erro ao carregar as medicações. Verifique o servidor.";
+      }
+    }
+
+    carregarMedicacoesPrescritas();
+  </script>
+</body>
+</html>

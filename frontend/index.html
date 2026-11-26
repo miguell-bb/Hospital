@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <title>Sentinela - Login</title>
+</head>
+<body>
+  <div class="container">
+    <h2>🏥 HSC - Hospital Sabrina Carpenter
+    </h2>
+
+    <input id="usuario" placeholder="Usuário" autocomplete="username">
+    <input id="senha" type="password" placeholder="Senha" autocomplete="current-password">
+
+    <button type="button" id="btnEntrar" onclick="login()">Entrar</button>
+    <p id="mensagem" role="status"></p>
+  </div>
+
+  <script>
+    async function login() {
+      const usuario = document.getElementById("usuario").value.trim();
+      const senha = document.getElementById("senha").value;
+      const mensagem = document.getElementById("mensagem");
+      const botao = document.getElementById("btnEntrar");
+
+      if (!usuario || !senha) {
+        alert("Preencha o usuário e a senha.");
+        return;
+      }
+
+      botao.disabled = true;
+      mensagem.textContent = "Entrando...";
+
+      try {
+        const resposta = await fetch("/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ usuario, senha })
+        });
+
+        const texto = await resposta.text();
+        let dados;
+
+        try {
+          dados = JSON.parse(texto);
+        } catch {
+          throw new Error(
+            "O servidor não retornou JSON válido. Verifique se o backend está funcionando."
+          );
+        }
+
+        if (!resposta.ok) {
+          throw new Error(dados.erro || "Falha no login.");
+        }
+
+        // Redirecionamento baseado no tipo de usuário
+        if (dados.tipo === "triagem") {
+          location.href = "triagem.html";
+        } else if (dados.tipo === "medico") {
+          location.href = "medico.html";
+        } else if (dados.tipo === "atendimento") {
+          location.href = "atendimento.html";
+        } else {
+          alert("Tipo de usuário não reconhecido.");
+          botao.disabled = false;
+          mensagem.textContent = "";
+        }
+      } catch (erro) {
+        console.error("Erro no login:", erro);
+        mensagem.textContent = erro.message;
+        alert(erro.message || "Não foi possível conectar ao servidor.");
+        botao.disabled = false;
+      }
+    }
+
+    // Permitir submeter pressionando Enter em qualquer um dos campos
+    document.getElementById("usuario").addEventListener("keydown", event => {
+      if (event.key === "Enter") login();
+    });
+
+    document.getElementById("senha").addEventListener("keydown", event => {
+      if (event.key === "Enter") login();
+    });
+  </script>
+</body>
+</html>
