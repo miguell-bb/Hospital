@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -5,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <title>Atendimento</title>
+    <title>Sentinela | Atendimento</title>
 </head>
 
 <body>
@@ -41,50 +42,96 @@
 
     <input type="file" id="foto">
 
-    <button onclick="cadastrar()">Cadastrar</button>
+    <button type="button" id="btnCadastrar" onclick="cadastrar()">
+        Cadastrar
+    </button>
+
+    <p id="mensagem" role="status"></p>
 
 </div>
 
 <script>
 
+// =====================================
+// CONFIGURAÇÃO DA API
+// =====================================
+
+const API_URL = "http://localhost:3000";
+
+// =====================================
+// CADASTRAR PACIENTE
+// =====================================
+
 async function cadastrar() {
 
+    const botao = document.getElementById("btnCadastrar");
+    const mensagem = document.getElementById("mensagem");
+
     const paciente = {
-        nome: document.getElementById("nome").value,
-        cpf: document.getElementById("cpf").value,
-        data: document.getElementById("data").value,
-        sexo: document.getElementById("sexo").value,
-        nomeMae: document.getElementById("nomeMae").value,
-        estadoCivil: document.getElementById("estadoCivil").value,
-        endereco: document.getElementById("endereco").value,
-        telefone: document.getElementById("telefone").value,
-        email: document.getElementById("email").value,
-        contato: document.getElementById("contato").value,
+        nome: document.getElementById("nome").value.trim(),
+        cpf: document.getElementById("cpf").value.trim(),
+        data: document.getElementById("data").value.trim(),
+        sexo: document.getElementById("sexo").value.trim(),
+        nomeMae: document.getElementById("nomeMae").value.trim(),
+        estadoCivil: document.getElementById("estadoCivil").value.trim(),
+        endereco: document.getElementById("endereco").value.trim(),
+        telefone: document.getElementById("telefone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        contato: document.getElementById("contato").value.trim(),
         tipo: document.getElementById("tipo").value
     };
+
+    // VALIDAR CAMPOS OBRIGATÓRIOS
 
     if (!paciente.nome || !paciente.cpf) {
         alert("Preencha pelo menos o nome e o CPF do paciente.");
         return;
     }
 
+    botao.disabled = true;
+    mensagem.textContent = "Cadastrando paciente...";
+
     try {
 
-        const resposta = await fetch("/atendimento", {
+        const resposta = await fetch(`${API_URL}/atendimento`, {
             method: "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
+
             body: JSON.stringify(paciente)
         });
 
-        const dados = await resposta.json();
+        // LER RESPOSTA DO SERVIDOR
 
-        if (!resposta.ok) {
-            throw new Error(dados.erro || "Erro ao cadastrar paciente.");
+        const texto = await resposta.text();
+
+        let dados;
+
+        try {
+            dados = JSON.parse(texto);
+        } catch {
+            throw new Error(
+                `Resposta inválida do servidor (HTTP ${resposta.status}).`
+            );
         }
 
+        if (!resposta.ok) {
+            throw new Error(
+                dados.erro || "Erro ao cadastrar paciente."
+            );
+        }
+
+        // SUCESSO
+
+        console.log("Paciente cadastrado:", dados.paciente);
+
+        mensagem.textContent = "Paciente cadastrado com sucesso!";
+
         alert("Paciente cadastrado e enviado para a triagem!");
+
+        // LIMPAR FORMULÁRIO
 
         document.getElementById("nome").value = "";
         document.getElementById("cpf").value = "";
@@ -101,9 +148,18 @@ async function cadastrar() {
 
     } catch (erro) {
 
-        console.error("Erro:", erro);
+        console.error("Erro ao cadastrar paciente:", erro);
 
-        alert("Não foi possível cadastrar o paciente. Verifique se o servidor está funcionando.");
+        mensagem.textContent = erro.message;
+
+        alert(
+            "Não foi possível cadastrar o paciente:\n" +
+            erro.message
+        );
+
+    } finally {
+
+        botao.disabled = false;
 
     }
 }
