@@ -1,22 +1,7 @@
-Nenhum selecionado 
-
-Pular para o conteúdo
-Como usar o Gmail com leitores de tela
-Ativar as notificações na área de trabalho para o Gmail.
-   OK  Agora não(a)
-1 de 12
-(sem assunto)
-Caixa de entrada
-
-maria clara <mariaclara1a2025@gmail.com>
-09:17 (há 2 minutos)
-para mim
-
-Parece que esta mensagem está em inglês
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="css/medico.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -42,86 +27,54 @@ Parece que esta mensagem está em inglês
   <textarea id="obs" placeholder="Observações"></textarea>
 
   <button onclick="salvar()">Salvar</button>
-  <button onclick="vertv()">Ver TV</button>
 
 </div>
 
 <script>
+
 let triagensCarregadas = [];
 
-// Carregar triagens dos pacientes
-async function carregar() {
-  try {
-    const resposta = await fetch("/triagens");
+function carregar() {
+  fetch("/triagens")
+    .then(r => r.json())
+    .then(data => {
+      triagensCarregadas = data;
 
-    if (!resposta.ok) {
-      throw new Error("Erro ao carregar triagens.");
-    }
+      const div = document.getElementById("triagens");
+      div.innerHTML = "";
 
-    const data = await resposta.json();
-    triagensCarregadas = data;
+      data.forEach((t, index) => {
+        div.innerHTML += `
+          <div class="card">
+            <h3>${t.nome}</h3>
 
-    const div = document.getElementById("triagens");
-    div.innerHTML = "";
+            <p><b>Sintoma:</b> ${t.sintoma || "Não informado"}</p>
 
-    data.forEach((t, index) => {
-      const card = document.createElement("div");
-      card.className = "card";
+            <p><b>Temperatura:</b> ${t.temperatura || "Não informada"}°C</p>
 
-      const titulo = document.createElement("h3");
-      titulo.textContent = t.nome || "Paciente";
+            <p>
+              <span class="${t.risco}">
+                ${t.risco}
+              </span>
+            </p>
 
-      const sintoma = document.createElement("p");
-      sintoma.textContent = "Sintoma: " + (t.sintoma || "Não informado");
+            <p><b>Alergia:</b> ${t.alergia || "Nenhuma"}</p>
 
-      const temperatura = document.createElement("p");
-      temperatura.textContent =
-        "Temperatura: " +
-        (t.temperatura ?? "Não informada") +
-        (t.temperatura != null ? "°C" : "");
+            <p><b>Observação:</b> ${t.observacao || "Nenhuma"}</p>
 
-      const risco = document.createElement("p");
-      const etiqueta = document.createElement("span");
-      etiqueta.textContent = t.risco || "Não informado";
-      etiqueta.className = t.risco || "";
-      risco.appendChild(etiqueta);
-
-      const alergia = document.createElement("p");
-      alergia.textContent = "Alergia: " + (t.alergia || "Nenhuma");
-
-      const observacao = document.createElement("p");
-      observacao.textContent =
-        "Observação: " + (t.observacao || "Nenhuma");
-
-      const botao = document.createElement("button");
-      botao.textContent = "Atender";
-      botao.addEventListener("click", () => selecionar(index));
-
-      card.append(
-        titulo,
-        sintoma,
-        temperatura,
-        risco,
-        alergia,
-        observacao,
-        botao
-      );
-
-      div.appendChild(card);
+            <button onclick="selecionar(${index})">
+              Atender
+            </button>
+          </div>
+        `;
+      });
     });
-  } catch (erro) {
-    console.error("Erro ao carregar triagens:", erro);
-    alert("Não foi possível carregar as triagens. Verifique o servidor.");
-  }
 }
 
-// Selecionar paciente
 function selecionar(index) {
   const t = triagensCarregadas[index];
 
-  if (!t) return;
-
-  document.getElementById("paciente").value = t.nome || "";
+  document.getElementById("paciente").value = t.nome;
   document.getElementById("obs").value = t.observacao || "";
 
   if (t.alergia && t.alergia !== "Nenhuma") {
@@ -129,55 +82,26 @@ function selecionar(index) {
   }
 }
 
-// Carregar medicações
-async function carregarMedicacoes() {
-  const medicamentosPadrao = [
-    "Dipirona",
-    "Paracetamol",
-    "Ibuprofeno",
-    "Amoxicilina",
-    "Azitromicina",
-    "Loratadina",
-    "Omeprazol",
-    "Buscopan",
-    "Dramin",
-    "Soro fisiológico"
-  ];
+function carregarMedicacoes() {
+  fetch("/lista-medicacoes")
+    .then(r => r.json())
+    .then(data => {
+      const select = document.getElementById("medicacao");
 
-  try {
-    const resposta = await fetch("/lista-medicacoes");
+      select.innerHTML = `
+        <option value="">Selecione a medicação</option>
+      `;
 
-    if (!resposta.ok) {
-      throw new Error("Erro ao carregar medicações.");
-    }
-
-    const data = await resposta.json();
-    const select = document.getElementById("medicacao");
-    const medicamentos = Array.isArray(data) ? data : [];
-    const opcoes = [...new Set([...medicamentosPadrao, ...medicamentos])];
-
-    select.innerHTML = '<option value="">Selecione a medicação</option>';
-    opcoes.forEach(med => {
-      const option = document.createElement("option");
-      option.value = med;
-      option.textContent = med;
-      select.appendChild(option);
+      data.forEach(med => {
+        const option = document.createElement("option");
+        option.value = med;
+        option.textContent = med;
+        select.appendChild(option);
+      });
     });
-  } catch (erro) {
-    console.error("Erro ao carregar medicações:", erro);
-    const select = document.getElementById("medicacao");
-    select.innerHTML = '<option value="">Selecione a medicação</option>';
-    medicamentosPadrao.forEach(med => {
-      const option = document.createElement("option");
-      option.value = med;
-      option.textContent = med;
-      select.appendChild(option);
-    });
-  }
 }
 
-// Salvar consulta
-async function salvar() {
+function salvar() {
   const paciente = document.getElementById("paciente").value;
   const diagnostico = document.getElementById("diagnostico").value;
   const medicacao = document.getElementById("medicacao").value;
@@ -193,50 +117,31 @@ async function salvar() {
     return;
   }
 
-  try {
-    const resposta = await fetch("/consulta", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        paciente,
-        diagnostico,
-        medicacao,
-        obs
-      })
-    });
-
-    const resultado = await resposta.json();
-    if (!resposta.ok) {
-      throw new Error(resultado.mensagem || "Não foi possível salvar a consulta.");
-    }
-
-    alert(resultado.mensagem || "Consulta salva com sucesso!");
+  fetch("/consulta", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      paciente,
+      diagnostico,
+      medicacao,
+      obs
+    })
+  })
+  .then(r => r.json())
+  .then(() => {
+    alert("Consulta salva");
 
     document.getElementById("diagnostico").value = "";
     document.getElementById("medicacao").value = "";
     document.getElementById("obs").value = "";
-    document.getElementById("paciente").value = "";
-    await carregarMedicacoes();
-  } catch (erro) {
-    console.error("Erro ao salvar consulta:", erro);
-    alert(erro.message || "Erro ao salvar. Verifique o servidor.");
-  }
+  });
 }
 
-// ABRIR A TV
-function vertv() {
-  const janela = window.open("/tv.html", "_blank");
-
-  if (!janela) {
-    alert("O navegador bloqueou a abertura da TV. Permita pop-ups para este site.");
-  }
-}
-
-// Inicializar painel
 carregar();
 carregarMedicacoes();
+
 </script>
 
 </body>
