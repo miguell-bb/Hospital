@@ -1,7 +1,12 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
+
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
+  <title>Painel Médico</title>
 </head>
 
 <body>
@@ -33,10 +38,21 @@
 <script>
 
 let triagensCarregadas = [];
+let triagemIdSelecionada = null;
+
+// =========================
+// CARREGAR TRIAGENS
+// =========================
 
 function carregar() {
   fetch("/triagens")
-    .then(r => r.json())
+    .then(r => {
+      if (!r.ok) {
+        throw new Error("Erro ao carregar as triagens.");
+      }
+
+      return r.json();
+    })
     .then(data => {
       triagensCarregadas = data;
 
@@ -68,11 +84,21 @@ function carregar() {
           </div>
         `;
       });
+    })
+    .catch(erro => {
+      console.error("Erro:", erro);
+      alert(erro.message);
     });
 }
 
+// =========================
+// SELECIONAR PACIENTE
+// =========================
+
 function selecionar(index) {
   const t = triagensCarregadas[index];
+
+  triagemIdSelecionada = t.id;
 
   document.getElementById("paciente").value = t.nome;
   document.getElementById("obs").value = t.observacao || "";
@@ -82,9 +108,20 @@ function selecionar(index) {
   }
 }
 
+// =========================
+// CARREGAR MEDICAMENTOS
+// DIRETAMENTE DO ESTOQUE
+// =========================
+
 function carregarMedicacoes() {
   fetch("/lista-medicacoes")
-    .then(r => r.json())
+    .then(r => {
+      if (!r.ok) {
+        throw new Error("Erro ao carregar os medicamentos do estoque.");
+      }
+
+      return r.json();
+    })
     .then(data => {
       const select = document.getElementById("medicacao");
 
@@ -92,22 +129,38 @@ function carregarMedicacoes() {
         <option value="">Selecione a medicação</option>
       `;
 
+      if (data.length === 0) {
+        select.innerHTML = `
+          <option value="">Nenhum medicamento disponível no estoque</option>
+        `;
+        return;
+      }
+
       data.forEach(med => {
         const option = document.createElement("option");
         option.value = med;
         option.textContent = med;
         select.appendChild(option);
       });
+    })
+    .catch(erro => {
+      console.error("Erro:", erro);
+      alert(erro.message);
     });
 }
 
-function salvar() {
+// =========================
+// SALVAR CONSULTA
+// COM BAIXA AUTOMÁTICA
+// =========================
+
+async function salvar() {
   const paciente = document.getElementById("paciente").value;
   const diagnostico = document.getElementById("diagnostico").value;
   const medicacao = document.getElementById("medicacao").value;
   const obs = document.getElementById("obs").value;
 
-  if (!paciente) {
+  if (!paciente || triagemIdSelecionada === null) {
     alert("Selecione um paciente clicando em Atender.");
     return;
   }
@@ -117,27 +170,63 @@ function salvar() {
     return;
   }
 
-  fetch("/consulta", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      paciente,
-      diagnostico,
-      medicacao,
-      obs
-    })
-  })
-  .then(r => r.json())
-  .then(() => {
-    alert("Consulta salva");
+  if (!diagnostico.trim()) {
+    alert("Informe o diagnóstico.");
+    return;
+  }
+
+  try {
+    const resposta = await fetch("/consulta", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        paciente,
+        diagnostico,
+        medicacao,
+        obs,
+        triagemId: triagemIdSelecionada
+      })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      throw new Error(
+        dados.erro || "Não foi possível salvar a consulta."
+      );
+    }
+
+    alert(
+      "Consulta salva com sucesso!\n" +
+      "1 unidade de " + medicacao +
+      " foi descontada do estoque."
+    );
 
     document.getElementById("diagnostico").value = "";
     document.getElementById("medicacao").value = "";
     document.getElementById("obs").value = "";
-  });
+    document.getElementById("paciente").value = "";
+
+    triagemIdSelecionada = null;
+
+    // Atualiza os medicamentos disponíveis.
+    carregarMedicacoes();
+
+    // Atualiza as triagens.
+    carregar();
+
+  } catch (erro) {
+    alert(erro.message);
+  }
 }
+
+// =========================
+// INICIALIZAÇÃO
+// =========================
 
 carregar();
 carregarMedicacoes();
