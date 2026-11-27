@@ -1,3 +1,4 @@
+
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -26,7 +27,8 @@ function criarBancoInicial() {
     pacientes: [],
     triagens: [],
     consultas: [],
-    estoque: []
+    estoque: [],
+    historicoEstoque: []
   };
 }
 
@@ -49,7 +51,8 @@ function readDB() {
     "pacientes",
     "triagens",
     "consultas",
-    "estoque"
+    "estoque",
+    "historicoEstoque"
   ]) {
     if (db[chave] === undefined) db[chave] = [];
 
@@ -285,25 +288,22 @@ app.get("/triagens", (req, res) => {
 
 // =========================
 // LISTA DE MEDICAÇÕES
+// AGORA VEM DO ESTOQUE REAL
 // =========================
 
 app.get("/lista-medicacoes", (req, res) => {
-  return res.json([
-    "Dipirona",
-    "Paracetamol",
-    "Ibuprofeno",
-    "Amoxicilina",
-    "Azitromicina",
-    "Loratadina",
-    "Omeprazol",
-    "Buscopan",
-    "Dramin",
-    "Soro fisiológico"
-  ]);
+  const db = readDB();
+
+  const medicamentos = db.estoque
+    .filter(item => Number(item.quantidade) > 0)
+    .map(item => item.nome);
+
+  return res.json(medicamentos);
 });
 
 // =========================
 // CONSULTA MÉDICA
+// COM BAIXA AUTOMÁTICA
 // =========================
 
 app.post("/consulta", (req, res) => {
@@ -311,6 +311,7 @@ app.post("/consulta", (req, res) => {
   const diagnostico = texto(req.body?.diagnostico);
   const medicacao = texto(req.body?.medicacao);
   const obs = texto(req.body?.obs);
+  const triagemId = req.body?.triagemId ?? null;
 
   if (!pacienteNome || !diagnostico || !medicacao) {
     return erroValidacao(
@@ -320,7 +321,50 @@ app.post("/consulta", (req, res) => {
   }
 
   const db = readDB();
-  const triagemId = req.body?.triagemId ?? null;
+
+  // Impede salvar duas consultas para a mesma triagem.
+  if (
+    triagemId !== null &&
+    db.consultas.some(
+      c => String(c.triagemId) === String(triagemId)
+    )
+  ) {
+    return erroValidacao(
+      res,
+      "Essa triagem já possui uma consulta registrada.",
+      409
+    );
+  }
+
+  // Normaliza nomes para comparar sem diferenças de acentos.
+  const normalizar = nome =>
+    String(nome).trim().normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+  // Procura o medicamento no estoque.
+  const medicamentoEstoque = db.estoque.find(
+    item => normalizar(item.nome) === normalizar(medicacao)
+  );
+
+  if (!medicamentoEstoque) {
+    return erroValidacao(
+      res,
+      "Esse medicamento não está cadastrado no almoxarifado.",
+      404
+    );
+  }
+
+  // Verifica se existe quantidade disponível.
+  if (Number(medicamentoEstoque.quantidade) < 1) {
+    return erroValidacao(
+      res,
+      `Estoque insuficiente de ${medicamentoEstoque.nome}.`,
+      409
+    );
+  }
+
+  const agora = new Date().toISOString();
 
   const consulta = {
     id: proximoId(db.consultas),
@@ -329,11 +373,31 @@ app.post("/consulta", (req, res) => {
     diagnostico,
     medicacao,
     obs,
-    createdAt: new Date().toISOString()
+    createdAt: agora
   };
+
+  // DESCONTA UMA UNIDADE.
+  medicamentoEstoque.quantidade =
+    Number(medicamentoEstoque.quantidade) - 1;
+
+  medicamentoEstoque.updatedAt = agora;
+
+  // REGISTRA A RETIRADA NO HISTÓRICO.
+  db.historicoEstoque.unshift({
+    id: proximoId(db.historicoEstoque),
+    tipo: "retirada",
+    nome: medicamentoEstoque.nome,
+    quantidade: 1,
+    unidade: medicamentoEstoque.unidade || "unidades",
+    data: agora,
+    responsavel: "Médico",
+    observacao: `Retirada automática pela consulta de ${pacienteNome}`,
+    consultaId: consulta.id
+  });
 
   db.consultas.push(consulta);
 
+  // Atualiza o status da triagem e do paciente.
   if (triagemId !== null) {
     const triagem = db.triagens.find(
       t => String(t.id) === String(triagemId)
@@ -346,15 +410,19 @@ app.post("/consulta", (req, res) => {
         p => String(p.id) === String(triagem.pacienteId)
       );
 
-      if (paciente) paciente.status = "atendido";
+      if (paciente) {
+        paciente.status = "atendido";
+      }
     }
   }
 
+  // Salva consulta, estoque e histórico juntos.
   writeDB(db);
 
   return res.status(201).json({
-    mensagem: "Consulta salva com sucesso.",
-    consulta
+    mensagem: "Consulta salva e estoque atualizado com sucesso.",
+    consulta,
+    medicamento: medicamentoEstoque
   });
 });
 
@@ -376,6 +444,13 @@ app.get("/medicacoes", (req, res) => {
 app.get("/estoque", (req, res) => {
   const db = readDB();
   return res.json(db.estoque);
+});
+
+// HISTÓRICO DE MOVIMENTAÇÕES
+
+app.get("/estoque/historico", (req, res) => {
+  const db = readDB();
+  return res.json(db.historicoEstoque);
 });
 
 // CADASTRAR MEDICAMENTO
