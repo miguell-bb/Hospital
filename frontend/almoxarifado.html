@@ -7,1125 +7,2259 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sentinela | Almoxarifado</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-
     <style>
-      
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #174A78;
+            --primary-dark: #10395F;
+            --blue-light: #DCEEFF;
+            --blue-soft: #EDF5FC;
+            --yellow: #FFF4C2;
+            --yellow-dark: #E6C65C;
+            --dark: #23364A;
+            --slate-500: #718398;
+            --background: #F3F7FC;
+            --white: #FFFFFF;
+            --border: #E1EAF3;
+            --green: #16845B;
+            --orange: #C58A20;
+            --red: #D94C4C;
+            --shadow: 0 4px 18px rgba(23, 74, 120, 0.07);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--dark);
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            background: var(--white);
+            min-height: 85px;
+            padding: 15px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--yellow);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--blue-light);
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .nav-brand h1 {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .nav-brand span {
+            display: block;
+            color: var(--slate-500);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-pill {
+            background: var(--blue-light);
+            color: var(--primary);
+            padding: 10px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .btn-nav {
+            background: var(--yellow);
+            color: var(--primary-dark);
+            text-decoration: none;
+            padding: 11px 17px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: .2s;
+        }
+
+        .btn-nav:hover {
+            background: #F8E69A;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            max-width: 1500px;
+            width: 92%;
+            margin: 35px auto;
+        }
+
+        /* ALERTA */
+
+        .alerta-estoque {
+            background: var(--yellow);
+            border: 1px solid var(--yellow-dark);
+            color: #765C16;
+            padding: 17px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        /* INDICADORES */
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: .2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            width: 53px;
+            height: 53px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
+
+        .purple {
+            background: var(--blue-light);
+        }
+
+        .green {
+            background: #E3F5EB;
+        }
+
+        .orange {
+            background: var(--yellow);
+        }
+
+        .red {
+            background: #FCE8E8;
+        }
+
+        .stat-value {
+            font-size: 27px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--slate-500);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* GRID */
+
+        .main-grid {
+            max-width: 1500px;
+            width: 92%;
+            margin: 0 auto 35px;
+            display: grid;
+            grid-template-columns: .85fr 1.5fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* CARDS */
+
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 20px;
+            min-width: 0;
+        }
+
+        .card-header {
+            padding: 21px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .card-header h2 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* ABAS */
+
+        .entrada-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--blue-soft);
+            color: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .tab-btn:hover,
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* FORMULÁRIOS */
+
+        .form-group {
+            margin-bottom: 19px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .form-group small {
+            color: var(--slate-500);
+            font-weight: 400;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 46px;
+            padding: 0 14px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #F8FBFF;
+            color: var(--dark);
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            transition: .2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(23, 74, 120, .10);
+        }
+
+        /* BOTÕES */
+
+        .btn-full {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-purple {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-purple:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 14px rgba(23, 74, 120, .2);
+        }
+
+        .btn-sm {
+            padding: 9px 13px;
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-secondary {
+            background: var(--blue-light);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #C8E1F8;
+        }
+
+        .btn-success {
+            background: #E3F5EB;
+            color: var(--green);
+        }
+
+        .btn-success:hover {
+            background: #CDEBDD;
+        }
+
+        .btn-danger-sm {
+            background: #FCE8E8;
+            color: var(--red);
+        }
+
+        .btn-danger-sm:hover {
+            background: #F8D4D4;
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        /* PESQUISA */
+
+        .search-bar {
+            margin-bottom: 17px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 15px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #F8FBFF;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* FILTROS */
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .chip {
+            background: var(--blue-soft);
+            color: var(--primary);
+            padding: 8px 14px;
+            border: none;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .chip:hover,
+        .chip.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* TABELA */
+
+        .estoque-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 550px;
+        }
+
+        .estoque-table thead {
+            background: var(--blue-soft);
+        }
+
+        .estoque-table th {
+            padding: 15px 12px;
+            color: var(--primary);
+            font-size: 11px;
+            text-align: left;
+            text-transform: uppercase;
+        }
+
+        .estoque-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+        }
+
+        .estoque-table tbody tr:hover {
+            background: #F5F9FE;
+        }
+
+        .med-name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .med-cat {
+            color: var(--slate-500);
+        }
+
+        /* ESTOQUE */
+
+        .stock-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .stock-ok {
+            background: #E3F5EB;
+            color: #16845B;
+        }
+
+        .stock-low {
+            background: var(--yellow);
+            color: #98721A;
+        }
+
+        .stock-critical {
+            background: #FFE8D6;
+            color: #B65E22;
+        }
+
+        .stock-empty {
+            background: #FCE8E8;
+            color: #BD2525;
+        }
+
+        /* AÇÕES */
+
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 7px;
+        }
+
+        /* HISTÓRICO */
+
+        .hist-item {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hist-item:last-child {
+            border-bottom: none;
+        }
+
+        .hist-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--blue-light);
+            font-size: 19px;
+        }
+
+        .hist-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .hist-med {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .hist-sub {
+            color: var(--slate-500);
+            font-size: 10px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .hist-qty-pos {
+            color: var(--green);
+            font-size: 12px;
+            font-weight: 800;
+            text-align: right;
+        }
+
+        .hist-qty-neg {
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 800;
+            text-align: right;
+        }
+
+        /* ESTADO VAZIO */
+
+        .empty-state {
+            padding: 35px 15px;
+            text-align: center;
+            color: var(--slate-500);
+            font-size: 13px;
+        }
+
+        .empty-icon {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        /* MODAL */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(16, 43, 70, .55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            width: 100%;
+            max-width: 440px;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, .15);
+        }
+
+        .modal-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 24px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
+        /* TOAST */
+
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            max-width: min(450px, calc(100% - 30px));
+            background: var(--primary);
+            color: white;
+            padding: 15px 22px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: .3s;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .toast-success {
+            background: var(--green);
+        }
+
+        .toast-error {
+            background: var(--red);
+        }
+
+        .toast-warning {
+            background: #B78A24;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 1000px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 16px 4%;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .nav-brand h1 {
+                font-size: 15px;
+            }
+
+            .nav-user {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .container,
+            .main-grid {
+                width: 94%;
+                margin: 20px auto;
+            }
+
+            .stats-bar {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 13px;
+                gap: 10px;
+            }
+
+            .stat-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 17px;
+            }
+
+            .stat-value {
+                font-size: 21px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .card-header,
+            .card-body {
+                padding: 17px;
+            }
+
+            .action-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toast {
+                left: 15px;
+                right: 15px;
+                bottom: 15px;
+                max-width: none;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-<header class="navbar">
-    <div class="nav-brand">
-        <div class="logo-icon">📦</div>
-        <div>
-            <h1>Sentinela | Almoxarifado</h1>
-            <span>Gestão de entrada e controle de estoque</span>
-        </div>
-    </div>
+    <!-- NAVBAR -->
 
-    <div class="nav-user">
-        <span class="user-pill" id="nomeUsuario">📦 Almoxarifado</span>
-        <a href="index.html" class="btn-nav">Sair</a>
-    </div>
-</header>
+    <header class="navbar">
 
-<main>
+        <div class="nav-brand">
+            <div class="logo-icon">📦</div>
 
-    <section class="container">
-
-        <div class="alerta-estoque" id="alertaEstoque" hidden>
-            ⚠️ <strong>Atenção:</strong>
-            <span id="alertaTexto"></span>
+            <div>
+                <h1>Sentinela | Almoxarifado</h1>
+                <span>Gestão de entrada e controle de estoque</span>
+            </div>
         </div>
 
-        <div class="stats-bar">
+        <div class="nav-user">
+            <span class="user-pill" id="nomeUsuario">
+                📦 Almoxarifado
+            </span>
 
-            <div class="stat-card">
-                <div class="stat-icon purple">📦</div>
-                <div>
-                    <div class="stat-value" id="statItens">0</div>
-                    <div class="stat-label">Tipos cadastrados</div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon green">🟢</div>
-                <div>
-                    <div class="stat-value" id="statOk">0</div>
-                    <div class="stat-label">Estoque normal</div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon orange">⚠️</div>
-                <div>
-                    <div class="stat-value" id="statBaixo">0</div>
-                    <div class="stat-label">Estoque baixo</div>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon red">🛑</div>
-                <div>
-                    <div class="stat-value" id="statZerado">0</div>
-                    <div class="stat-label">Esgotados</div>
-                </div>
-            </div>
-
+            <a href="index.html" class="btn-nav">Sair</a>
         </div>
-    </section>
 
-    <section class="main-grid">
+    </header>
 
-        <div>
+    <main>
+
+        <!-- INDICADORES -->
+
+        <section class="container">
+
+            <div class="alerta-estoque" id="alertaEstoque" hidden>
+                ⚠️ <strong>Atenção:</strong>
+                <span id="alertaTexto"></span>
+            </div>
+
+            <div class="stats-bar">
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">📦</div>
+
+                    <div>
+                        <div class="stat-value" id="statItens">0</div>
+                        <div class="stat-label">Tipos cadastrados</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">🟢</div>
+
+                    <div>
+                        <div class="stat-value" id="statOk">0</div>
+                        <div class="stat-label">Estoque normal</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">⚠️</div>
+
+                    <div>
+                        <div class="stat-value" id="statBaixo">0</div>
+                        <div class="stat-label">Estoque baixo</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon red">🛑</div>
+
+                    <div>
+                        <div class="stat-value" id="statZerado">0</div>
+                        <div class="stat-label">Esgotados</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+
+        <section class="main-grid">
+
+            <!-- COLUNA ESQUERDA -->
+
+            <div>
+
+                <!-- ENTRADA DE MEDICAMENTOS -->
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h2>Entrada de medicamentos</h2>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="entrada-tabs">
+
+                            <button
+                                type="button"
+                                class="tab-btn active"
+                                id="tabNovo">
+
+                                + Novo medicamento
+
+                            </button>
+
+                            <button
+                                type="button"
+                                class="tab-btn"
+                                id="tabRepor">
+
+                                Repor existente
+
+                            </button>
+
+                        </div>
+
+                        <!-- NOVO MEDICAMENTO -->
+
+                        <div id="painelNovo">
+
+                            <div class="form-group">
+
+                                <label for="emNome">
+                                    Nome do medicamento
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="emNome"
+                                    class="form-control"
+                                    placeholder="Ex: Paracetamol 750mg"
+                                    maxlength="100">
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="emQtd">
+                                    Quantidade
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="emQtd"
+                                    class="form-control"
+                                    min="1"
+                                    step="1"
+                                    value="10">
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="emUnidade">
+                                    Unidade
+                                </label>
+
+                                <select id="emUnidade" class="form-control">
+
+                                    <option value="comprimidos">
+                                        Comprimidos
+                                    </option>
+
+                                    <option value="cápsulas">
+                                        Cápsulas
+                                    </option>
+
+                                    <option value="frascos">
+                                        Frascos
+                                    </option>
+
+                                    <option value="ampolas">
+                                        Ampolas
+                                    </option>
+
+                                    <option value="sachês">
+                                        Sachês
+                                    </option>
+
+                                    <option value="unidades">
+                                        Unidades
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="emCategoria">
+                                    Categoria
+                                </label>
+
+                                <select id="emCategoria" class="form-control">
+
+                                    <option value="Antibiótico">
+                                        Antibiótico
+                                    </option>
+
+                                    <option value="Anti-inflamatório">
+                                        Anti-inflamatório
+                                    </option>
+
+                                    <option value="Antialérgico">
+                                        Antialérgico
+                                    </option>
+
+                                    <option value="Protetor Gástrico">
+                                        Protetor Gástrico
+                                    </option>
+
+                                    <option value="Antiespasmódico">
+                                        Antiespasmódico
+                                    </option>
+
+                                    <option value="Antiemético">
+                                        Antiemético
+                                    </option>
+
+                                    <option value="Solução">
+                                        Solução
+                                    </option>
+
+                                    <option value="Vitamina/Suplemento">
+                                        Vitamina / Suplemento
+                                    </option>
+
+                                    <option value="Geral">
+                                        Geral
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn-full btn-purple"
+                                id="btnCadastrar">
+
+                                Registrar entrada no estoque
+
+                            </button>
+
+                        </div>
+
+                        <!-- REPOR MEDICAMENTO -->
+
+                        <div id="painelRepor" hidden>
+
+                            <div class="form-group">
+
+                                <label for="selReporMed">
+                                    Selecionar medicamento
+                                </label>
+
+                                <select
+                                    id="selReporMed"
+                                    class="form-control">
+
+                                    <option value="">-- Selecione --</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="reporQtd">
+                                    Quantidade a adicionar
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="reporQtd"
+                                    class="form-control"
+                                    min="1"
+                                    step="1"
+                                    value="10">
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="reporObs">
+                                    Observação (opcional)
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="reporObs"
+                                    class="form-control"
+                                    maxlength="200"
+                                    placeholder="Ex: Nota fiscal">
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn-full btn-purple"
+                                id="btnRepor">
+
+                                Adicionar ao estoque
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- HISTÓRICO -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h2>Histórico de movimentações</h2>
+
+                        <button
+                            type="button"
+                            class="btn-sm btn-secondary"
+                            id="btnAtualizarHistorico">
+
+                            ↻ Atualizar
+
+                        </button>
+
+                    </div>
+
+                    <div class="card-body" id="historicoEntradas">
+
+                        <div class="empty-state">
+                            <div class="empty-icon">📖</div>
+                            Carregando histórico...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- COLUNA DIREITA -->
 
             <div class="card">
 
                 <div class="card-header">
-                    <h2>Entrada de medicamentos</h2>
+
+                    <h2>Estoque atual de medicamentos</h2>
+
+                    <button
+                        type="button"
+                        class="btn-sm btn-secondary"
+                        id="btnAtualizar">
+
+                        ↻ Atualizar
+
+                    </button>
+
                 </div>
 
                 <div class="card-body">
 
-                    <div class="entrada-tabs">
-                        <button type="button" class="tab-btn active" id="tabNovo">
-                            + Novo medicamento
-                        </button>
+                    <div class="search-bar">
 
-                        <button type="button" class="tab-btn" id="tabRepor">
-                            Repor existente
-                        </button>
-                    </div>
-
-                    <div id="painelNovo">
-
-                        <div class="form-group">
-                            <label for="emNome">Nome do medicamento</label>
-                            <input
-                                type="text"
-                                id="emNome"
-                                class="form-control"
-                                placeholder="Ex: Paracetamol 750mg"
-                                maxlength="100">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="emQtd">Quantidade</label>
-                            <input
-                                type="number"
-                                id="emQtd"
-                                class="form-control"
-                                min="1"
-                                step="1"
-                                value="10">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="emUnidade">Unidade</label>
-                            <select id="emUnidade" class="form-control">
-                                <option value="comprimidos">Comprimidos</option>
-                                <option value="cápsulas">Cápsulas</option>
-                                <option value="frascos">Frascos</option>
-                                <option value="ampolas">Ampolas</option>
-                                <option value="sachês">Sachês</option>
-                                <option value="unidades">Unidades</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="emCategoria">Categoria</label>
-                            <select id="emCategoria" class="form-control">
-                                <option value="Antibiótico">Antibiótico</option>
-                                <option value="Anti-inflamatório">Anti-inflamatório</option>
-                                <option value="Antialérgico">Antialérgico</option>
-                                <option value="Protetor Gástrico">Protetor Gástrico</option>
-                                <option value="Antiespasmódico">Antiespasmódico</option>
-                                <option value="Antiemético">Antiemético</option>
-                                <option value="Solução">Solução</option>
-                                <option value="Vitamina/Suplemento">Vitamina / Suplemento</option>
-                                <option value="Geral">Geral</option>
-                            </select>
-                        </div>
-
-                        <button type="button" class="btn-full btn-purple" id="btnCadastrar">
-                            Registrar entrada no estoque
-                        </button>
+                        <input
+                            type="search"
+                            class="search-input"
+                            id="buscaMed"
+                            placeholder="Buscar medicamento por nome ou categoria...">
 
                     </div>
 
-                    <div id="painelRepor" hidden>
+                    <div
+                        class="filter-chips"
+                        id="filterChips">
+                    </div>
 
-                        <div class="form-group">
-                            <label for="selReporMed">Selecionar medicamento</label>
-                            <select id="selReporMed" class="form-control">
-                                <option value="">-- Selecione --</option>
-                            </select>
-                        </div>
+                    <div style="overflow-x:auto">
 
-                        <div class="form-group">
-                            <label for="reporQtd">Quantidade a adicionar</label>
-                            <input
-                                type="number"
-                                id="reporQtd"
-                                class="form-control"
-                                min="1"
-                                step="1"
-                                value="10">
-                        </div>
+                        <table class="estoque-table">
 
-                        <div class="form-group">
-                            <label for="reporObs">Observação (opcional)</label>
-                            <input
-                                type="text"
-                                id="reporObs"
-                                class="form-control"
-                                maxlength="200"
-                                placeholder="Ex: Nota fiscal">
-                        </div>
+                            <thead>
+                                <tr>
+                                    <th>Medicamento</th>
+                                    <th>Categoria</th>
+                                    <th>Disponível</th>
+                                    <th>Unidade</th>
+                                    <th style="text-align:right">
+                                        Ações
+                                    </th>
+                                </tr>
+                            </thead>
 
-                        <button type="button" class="btn-full btn-purple" id="btnRepor">
-                            Adicionar ao estoque
-                        </button>
+                            <tbody id="tabelaEstoque">
+
+                                <tr>
+                                    <td colspan="5">
+                                        <div class="empty-state">
+                                            Carregando estoque...
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
 
                     </div>
 
-                </div>
-            </div>
-
-            <div class="card">
-
-                <div class="card-header">
-                    <h2>Histórico de movimentações</h2>
-
-                    <button type="button" class="btn-sm btn-secondary" id="btnAtualizarHistorico">
-                        ↻ Atualizar
-                    </button>
-                </div>
-
-                <div class="card-body" id="historicoEntradas">
-                    <div class="empty-state">
-                        <div class="empty-icon">📖</div>
-                        Carregando histórico...
-                    </div>
                 </div>
 
             </div>
 
-        </div>
+        </section>
 
-        <div class="card">
+    </main>
 
-            <div class="card-header">
-                <h2>Estoque atual de medicamentos</h2>
+    <!-- MODAL DE EDIÇÃO -->
 
-                <button type="button" class="btn-sm btn-secondary" id="btnAtualizar">
-                    ↻ Atualizar
+    <div class="modal-overlay" id="modalEditar">
+
+        <div class="modal-box">
+
+            <div class="modal-title">
+                Editar quantidade
+            </div>
+
+            <p
+                id="modalMedNome"
+                style="font-size:12px;color:#64748b;margin-bottom:18px">
+            </p>
+
+            <div class="form-group">
+
+                <label for="modalQtd">
+                    Quantidade a movimentar
+                </label>
+
+                <input
+                    type="number"
+                    id="modalQtd"
+                    class="form-control"
+                    step="1"
+                    placeholder="Ex: 10 ou -5">
+
+                <small
+                    style="display:block;margin-top:7px;color:#718096;font-size:10px">
+
+                    Use um número positivo para adicionar ou negativo para retirar.
+
+                </small>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn-sm btn-secondary"
+                    id="btnCancelarEdicao">
+
+                    Cancelar
+
                 </button>
+
+                <button
+                    type="button"
+                    class="btn-sm btn-success"
+                    id="btnConfirmarEdicao">
+
+                    Confirmar
+
+                </button>
+
             </div>
 
-            <div class="card-body">
-
-                <div class="search-bar">
-                    <input
-                        type="search"
-                        class="search-input"
-                        id="buscaMed"
-                        placeholder="Buscar medicamento por nome ou categoria...">
-                </div>
-
-                <div class="filter-chips" id="filterChips"></div>
-
-                <div style="overflow-x:auto">
-
-                    <table class="estoque-table">
-
-                        <thead>
-                            <tr>
-                                <th>Medicamento</th>
-                                <th>Categoria</th>
-                                <th>Disponível</th>
-                                <th>Unidade</th>
-                                <th style="text-align:right">Ações</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="tabelaEstoque">
-                            <tr>
-                                <td colspan="5">
-                                    <div class="empty-state">Carregando estoque...</div>
-                                </td>
-                            </tr>
-                        </tbody>
-
-                    </table>
-
-                </div>
-            </div>
-        </div>
-
-    </section>
-
-</main>
-
-<!-- MODAL DE EDIÇÃO -->
-
-<div class="modal-overlay" id="modalEditar">
-
-    <div class="modal-box">
-
-        <div class="modal-title">Editar quantidade</div>
-
-        <p id="modalMedNome" style="font-size:12px;color:#64748b;margin-bottom:18px"></p>
-
-        <div class="form-group">
-            <label for="modalQtd">Quantidade a movimentar</label>
-
-            <input
-                type="number"
-                id="modalQtd"
-                class="form-control"
-                step="1"
-                placeholder="Ex: 10 ou -5">
-
-            <small style="display:block;margin-top:7px;color:#718096;font-size:10px">
-                Use um número positivo para adicionar ou negativo para retirar.
-            </small>
-        </div>
-
-        <div class="modal-actions">
-            <button type="button" class="btn-sm btn-secondary" id="btnCancelarEdicao">
-                Cancelar
-            </button>
-
-            <button type="button" class="btn-sm btn-success" id="btnConfirmarEdicao">
-                Confirmar
-            </button>
         </div>
 
     </div>
 
-</div>
+    <!-- NOTIFICAÇÕES -->
 
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div
+        id="toast"
+        class="toast"
+        role="status"
+        aria-live="polite">
+    </div>
 
-<script>
-"use strict";
+    <script>
+        "use strict";
 
-// ======================================
-// CONFIGURAÇÕES
-// ======================================
+        // ======================================
+        // CONFIGURAÇÕES
+        // ======================================
 
-const API_ESTOQUE = "/estoque";
+        const API_ESTOQUE = "/estoque";
 
-let estoqueGlobal = [];
-let historicoGlobal = [];
-let filtroAtivo = "todos";
-let editandoId = null;
-let toastTimer = null;
+        let estoqueGlobal = [];
+        let historicoGlobal = [];
+        let filtroAtivo = "todos";
+        let editandoId = null;
+        let toastTimer = null;
 
-// ======================================
-// ELEMENTOS
-// ======================================
+        // ======================================
+        // ELEMENTOS
+        // ======================================
 
-const elementos = {
-    nomeUsuario: document.getElementById("nomeUsuario"),
-    alertaEstoque: document.getElementById("alertaEstoque"),
-    alertaTexto: document.getElementById("alertaTexto"),
-    statItens: document.getElementById("statItens"),
-    statOk: document.getElementById("statOk"),
-    statBaixo: document.getElementById("statBaixo"),
-    statZerado: document.getElementById("statZerado"),
-    tabelaEstoque: document.getElementById("tabelaEstoque"),
-    filterChips: document.getElementById("filterChips"),
-    buscaMed: document.getElementById("buscaMed"),
-    historicoEntradas: document.getElementById("historicoEntradas"),
-    painelNovo: document.getElementById("painelNovo"),
-    painelRepor: document.getElementById("painelRepor"),
-    tabNovo: document.getElementById("tabNovo"),
-    tabRepor: document.getElementById("tabRepor"),
-    selReporMed: document.getElementById("selReporMed"),
-    modalEditar: document.getElementById("modalEditar"),
-    modalMedNome: document.getElementById("modalMedNome"),
-    modalQtd: document.getElementById("modalQtd"),
-    toast: document.getElementById("toast")
-};
+        const elementos = {
+            nomeUsuario: document.getElementById("nomeUsuario"),
+            alertaEstoque: document.getElementById("alertaEstoque"),
+            alertaTexto: document.getElementById("alertaTexto"),
 
-// ======================================
-// USUÁRIO
-// ======================================
+            statItens: document.getElementById("statItens"),
+            statOk: document.getElementById("statOk"),
+            statBaixo: document.getElementById("statBaixo"),
+            statZerado: document.getElementById("statZerado"),
 
-let usuario = {};
+            tabelaEstoque: document.getElementById("tabelaEstoque"),
+            filterChips: document.getElementById("filterChips"),
+            buscaMed: document.getElementById("buscaMed"),
 
-try {
-    usuario = JSON.parse(localStorage.getItem("hospital_user") || "{}");
-} catch (erro) {
-    usuario = {};
-}
+            historicoEntradas: document.getElementById("historicoEntradas"),
 
-if (usuario.nome || usuario.usuario) {
-    elementos.nomeUsuario.textContent =
-        "📦 " + (usuario.nome || usuario.usuario);
-}
+            painelNovo: document.getElementById("painelNovo"),
+            painelRepor: document.getElementById("painelRepor"),
 
-function nomeResponsavel() {
-    return usuario.nome || usuario.usuario || "Almoxarifado";
-}
+            tabNovo: document.getElementById("tabNovo"),
+            tabRepor: document.getElementById("tabRepor"),
 
-// ======================================
-// FUNÇÕES AUXILIARES
-// ======================================
+            selReporMed: document.getElementById("selReporMed"),
 
-function escaparHTML(valor) {
-    return String(valor ?? "").replace(/[&<>"']/g, caractere => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-    })[caractere]);
-}
+            modalEditar: document.getElementById("modalEditar"),
+            modalMedNome: document.getElementById("modalMedNome"),
+            modalQtd: document.getElementById("modalQtd"),
+
+            toast: document.getElementById("toast")
+        };
+
+        // ======================================
+        // USUÁRIO
+        // ======================================
+
+        let usuario = {};
+
+        try {
+            usuario = JSON.parse(
+                localStorage.getItem("hospital_user") || "{}"
+            );
+        } catch (erro) {
+            usuario = {};
+        }
+
+        if (usuario.nome || usuario.usuario) {
+            elementos.nomeUsuario.textContent =
+                "📦 " + (usuario.nome || usuario.usuario);
+        }
+
+        function nomeResponsavel() {
+            return usuario.nome ||
+                usuario.usuario ||
+                "Almoxarifado";
+        }
+
+        // ======================================
+        // FUNÇÕES AUXILIARES
+        // ======================================
+
+        function escaparHTML(valor) {
+            return String(valor ?? "").replace(/[&<>"']/g, caractere => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            })[caractere]);
+        }
+
+        function quantidadeValida(valor, permitirNegativo = false) {
+            const numero = Number(valor);
+
+            if (!Number.isInteger(numero)) {
+                return false;
+            }
+
+            if (permitirNegativo) {
+                return numero !== 0;
+            }
+
+            return numero > 0;
+        }
+
+        function formatarData(data) {
+            if (!data) {
+                return "Data não informada";
+            }
+
+            const dataObj = new Date(data);
+
+            if (Number.isNaN(dataObj.getTime())) {
+                return "Data não informada";
+            }
+
+            return dataObj.toLocaleString("pt-BR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+        // ======================================
+        // REQUISIÇÕES AO SERVIDOR
+        // ======================================
+
+      const API_URL = "http://localhost:3000";
 
 async function requisicao(url, opcoes = {}) {
-    const resposta = await fetch(url, opcoes);
+    const resposta = await fetch(`${API_URL}${url}`, {
+        ...opcoes,
+        headers: {
+            "Content-Type": "application/json",
+            ...(opcoes.headers || {})
+        }
+    });
 
-    let dados = {};
-
-    try {
-        dados = await resposta.json();
-    } catch (erro) {
-        throw new Error("O servidor retornou uma resposta inválida.");
-    }
+    const dados = await resposta.json();
 
     if (!resposta.ok) {
         throw new Error(
-            dados.erro || dados.mensagem || "Não foi possível concluir a operação."
+            dados.erro || `Erro HTTP ${resposta.status}`
         );
     }
 
     return dados;
 }
 
-function formatarData(data) {
-    if (!data) return "Data não informada";
+        // ======================================
+        // TOAST
+        // ======================================
 
-    const dataObj = new Date(data);
+        function showToast(mensagem, tipo = "success") {
+            clearTimeout(toastTimer);
 
-    if (Number.isNaN(dataObj.getTime())) {
-        return "Data não informada";
-    }
+            elementos.toast.textContent = mensagem;
 
-    return dataObj.toLocaleString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-    });
-}
+            elementos.toast.className =
+                `toast toast-${tipo} show`;
 
-function quantidadeValida(valor, permitirNegativo = false) {
-    const numero = Number(valor);
-
-    if (!Number.isInteger(numero)) return false;
-    if (permitirNegativo && numero === 0) return false;
-
-    return permitirNegativo || numero > 0;
-}
-
-// ======================================
-// TOAST
-// ======================================
-
-function showToast(mensagem, tipo = "success") {
-    clearTimeout(toastTimer);
-
-    elementos.toast.textContent = mensagem;
-    elementos.toast.className = "toast toast-" + tipo + " show";
-
-    toastTimer = setTimeout(() => {
-        elementos.toast.className = "toast";
-    }, 3500);
-}
-
-// ======================================
-// ABAS
-// ======================================
-
-function setTab(tab) {
-    const novo = tab === "novo";
-
-    elementos.painelNovo.hidden = !novo;
-    elementos.painelRepor.hidden = novo;
-
-    elementos.tabNovo.classList.toggle("active", novo);
-    elementos.tabRepor.classList.toggle("active", !novo);
-
-    if (!novo) {
-        preencherSelectRepor();
-    }
-}
-
-elementos.tabNovo.addEventListener("click", () => setTab("novo"));
-elementos.tabRepor.addEventListener("click", () => setTab("repor"));
-
-// ======================================
-// CARREGAR ESTOQUE
-// ======================================
-
-async function carregarEstoque() {
-    try {
-        const dados = await requisicao(API_ESTOQUE);
-
-        if (!Array.isArray(dados)) {
-            throw new Error("A lista de medicamentos retornada é inválida.");
+            toastTimer = setTimeout(() => {
+                elementos.toast.className = "toast";
+            }, 3500);
         }
 
-        estoqueGlobal = dados;
+        // ======================================
+        // ABAS
+        // ======================================
 
-        atualizarStats();
-        renderizarFiltros();
-        filtrarTabela();
-        verificarAlertas();
-        preencherSelectRepor();
+        function setTab(tab) {
+            const novo = tab === "novo";
 
-    } catch (erro) {
-        console.error("Erro ao carregar estoque:", erro);
+            elementos.painelNovo.hidden = !novo;
+            elementos.painelRepor.hidden = novo;
 
-        elementos.tabelaEstoque.innerHTML = `
-            <tr>
-                <td colspan="5">
-                    <div class="empty-state">
-                        Não foi possível carregar o estoque.
-                        <br><br>
-                        <button class="btn-sm btn-secondary" id="tentarNovamente">
-                            Tentar novamente
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `;
+            elementos.tabNovo.classList.toggle("active", novo);
+            elementos.tabRepor.classList.toggle("active", !novo);
 
-        document.getElementById("tentarNovamente")
-            .addEventListener("click", carregarEstoque);
-
-        showToast(erro.message, "error");
-    }
-}
-
-// ======================================
-// ESTATÍSTICAS
-// ======================================
-
-function atualizarStats() {
-    elementos.statItens.textContent = estoqueGlobal.length;
-
-    elementos.statOk.textContent = estoqueGlobal.filter(
-        m => Number(m.quantidade) > 10
-    ).length;
-
-    elementos.statBaixo.textContent = estoqueGlobal.filter(
-        m => Number(m.quantidade) > 0 && Number(m.quantidade) <= 10
-    ).length;
-
-    elementos.statZerado.textContent = estoqueGlobal.filter(
-        m => Number(m.quantidade) <= 0
-    ).length;
-}
-
-// ======================================
-// ALERTAS
-// ======================================
-
-function verificarAlertas() {
-    const baixo = estoqueGlobal.filter(
-        m => Number(m.quantidade) > 0 && Number(m.quantidade) <= 10
-    );
-
-    const zerado = estoqueGlobal.filter(
-        m => Number(m.quantidade) <= 0
-    );
-
-    const mensagens = [];
-
-    if (zerado.length) {
-        mensagens.push(zerado.length + " medicamento(s) esgotado(s)");
-    }
-
-    if (baixo.length) {
-        mensagens.push(baixo.length + " medicamento(s) com estoque baixo");
-    }
-
-    if (mensagens.length) {
-        elementos.alertaTexto.textContent =
-            mensagens.join(" | ") + ". Verifique a necessidade de reposição.";
-
-        elementos.alertaEstoque.hidden = false;
-    } else {
-        elementos.alertaEstoque.hidden = true;
-    }
-}
-
-// ======================================
-// FILTROS DE CATEGORIA
-// ======================================
-
-function renderizarFiltros() {
-    const categorias = [
-        ...new Set(
-            estoqueGlobal
-                .map(m => m.categoria)
-                .filter(Boolean)
-        )
-    ];
-
-    if (
-        filtroAtivo !== "todos" &&
-        !categorias.includes(filtroAtivo)
-    ) {
-        filtroAtivo = "todos";
-    }
-
-    elementos.filterChips.innerHTML = "";
-
-    const lista = ["todos", ...categorias];
-
-    lista.forEach(categoria => {
-        const chip = document.createElement("button");
-
-        chip.type = "button";
-        chip.className = "chip";
-        chip.textContent = categoria === "todos" ? "Todos" : categoria;
-
-        if (filtroAtivo === categoria) {
-            chip.classList.add("active");
+            if (!novo) {
+                preencherSelectRepor();
+            }
         }
 
-        chip.addEventListener("click", () => {
-            filtroAtivo = categoria;
-            renderizarFiltros();
-            filtrarTabela();
+        elementos.tabNovo.addEventListener("click", () => {
+            setTab("novo");
         });
 
-        elementos.filterChips.appendChild(chip);
-    });
-}
+        elementos.tabRepor.addEventListener("click", () => {
+            setTab("repor");
+        });
 
-// ======================================
-// BUSCA
-// ======================================
+        // ======================================
+        // CARREGAR ESTOQUE
+        // ======================================
 
-function filtrarTabela() {
-    const busca = elementos.buscaMed.value.toLowerCase().trim();
+        async function carregarEstoque() {
+            try {
+                const dados = await requisicao(API_ESTOQUE);
 
-    const filtrados = estoqueGlobal.filter(m => {
-        const nome = String(m.nome || "").toLowerCase();
-        const categoria = String(m.categoria || "").toLowerCase();
+                if (!Array.isArray(dados)) {
+                    throw new Error(
+                        "O servidor não retornou uma lista válida de medicamentos."
+                    );
+                }
 
-        const correspondeCategoria =
-            filtroAtivo === "todos" || m.categoria === filtroAtivo;
+                estoqueGlobal = dados;
 
-        const correspondeBusca =
-            nome.includes(busca) || categoria.includes(busca);
+                atualizarStats();
+                renderizarFiltros();
+                filtrarTabela();
+                verificarAlertas();
+                preencherSelectRepor();
 
-        return correspondeCategoria && correspondeBusca;
-    });
+            } catch (erro) {
+                console.error("Erro ao carregar estoque:", erro);
 
-    renderizarTabela(filtrados);
-}
+                elementos.tabelaEstoque.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                Não foi possível carregar o estoque.
+                                <br><br>
+                                <button
+                                    class="btn-sm btn-secondary"
+                                    id="tentarNovamente">
 
-elementos.buscaMed.addEventListener("input", filtrarTabela);
+                                    Tentar novamente
 
-// ======================================
-// SITUAÇÃO DO ESTOQUE
-// ======================================
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
 
-function getStockClass(quantidade) {
-    const qtd = Number(quantidade);
+                document
+                    .getElementById("tentarNovamente")
+                    .addEventListener("click", carregarEstoque);
 
-    if (qtd <= 0) return "stock-empty";
-    if (qtd <= 5) return "stock-critical";
-    if (qtd <= 10) return "stock-low";
+                showToast(erro.message, "error");
+            }
+        }
 
-    return "stock-ok";
-}
+        // ======================================
+        // ESTATÍSTICAS
+        // ======================================
 
-function getStockIcon(quantidade) {
-    const qtd = Number(quantidade);
+        function atualizarStats() {
+            elementos.statItens.textContent =
+                estoqueGlobal.length;
 
-    if (qtd <= 0) return "🛑";
-    if (qtd <= 5) return "🔴";
-    if (qtd <= 10) return "🟡";
+            elementos.statOk.textContent =
+                estoqueGlobal.filter(
+                    m => Number(m.quantidade) > 10
+                ).length;
 
-    return "🟢";
-}
+            elementos.statBaixo.textContent =
+                estoqueGlobal.filter(
+                    m =>
+                        Number(m.quantidade) > 0 &&
+                        Number(m.quantidade) <= 10
+                ).length;
 
-// ======================================
-// TABELA DE ESTOQUE
-// ======================================
+            elementos.statZerado.textContent =
+                estoqueGlobal.filter(
+                    m => Number(m.quantidade) <= 0
+                ).length;
+        }
 
-function renderizarTabela(data) {
-    if (!data.length) {
-        elementos.tabelaEstoque.innerHTML = `
-            <tr>
-                <td colspan="5">
-                    <div class="empty-state">
-                        <div class="empty-icon">📫</div>
-                        Nenhum medicamento encontrado.
-                    </div>
-                </td>
-            </tr>
-        `;
-        return;
-    }
+        // ======================================
+        // ALERTAS
+        // ======================================
 
-    elementos.tabelaEstoque.innerHTML = data.map(m => {
-        const nome = escaparHTML(m.nome);
-        const categoria = escaparHTML(m.categoria || "-");
-        const unidade = escaparHTML(m.unidade || "-");
-        const qtd = Number(m.quantidade) || 0;
-        const id = escaparHTML(m.id);
-
-        return `
-            <tr>
-                <td>
-                    <div class="med-name">${nome}</div>
-                </td>
-
-                <td>
-                    <div class="med-cat">${categoria}</div>
-                </td>
-
-                <td>
-                    <span class="stock-badge ${getStockClass(qtd)}">
-                        ${getStockIcon(qtd)} ${qtd}
-                    </span>
-                </td>
-
-                <td>${unidade}</td>
-
-                <td>
-                    <div class="action-row">
-                        <button
-                            type="button"
-                            class="btn-sm btn-success"
-                            data-action="editar"
-                            data-id="${id}">
-                            Editar
-                        </button>
-
-                        <button
-                            type="button"
-                            class="btn-sm btn-danger-sm"
-                            data-action="remover"
-                            data-id="${id}">
-                            Excluir
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `;
-    }).join("");
-
-    elementos.tabelaEstoque.querySelectorAll("[data-action]").forEach(botao => {
-        botao.addEventListener("click", () => {
-            const id = botao.dataset.id;
-
-            const medicamento = estoqueGlobal.find(
-                m => String(m.id) === String(id)
+        function verificarAlertas() {
+            const baixo = estoqueGlobal.filter(
+                m =>
+                    Number(m.quantidade) > 0 &&
+                    Number(m.quantidade) <= 10
             );
 
-            if (!medicamento) {
-                showToast("Medicamento não encontrado.", "error");
+            const zerado = estoqueGlobal.filter(
+                m => Number(m.quantidade) <= 0
+            );
+
+            const mensagens = [];
+
+            if (zerado.length) {
+                mensagens.push(
+                    zerado.length + " medicamento(s) esgotado(s)"
+                );
+            }
+
+            if (baixo.length) {
+                mensagens.push(
+                    baixo.length + " medicamento(s) com estoque baixo"
+                );
+            }
+
+            if (mensagens.length) {
+                elementos.alertaTexto.textContent =
+                    mensagens.join(" | ") +
+                    ". Verifique a necessidade de reposição.";
+
+                elementos.alertaEstoque.hidden = false;
+
+            } else {
+                elementos.alertaEstoque.hidden = true;
+            }
+        }
+
+        // ======================================
+        // FILTROS
+        // ======================================
+
+        function renderizarFiltros() {
+            const categorias = [
+                ...new Set(
+                    estoqueGlobal
+                        .map(m => m.categoria)
+                        .filter(Boolean)
+                )
+            ];
+
+            if (
+                filtroAtivo !== "todos" &&
+                !categorias.includes(filtroAtivo)
+            ) {
+                filtroAtivo = "todos";
+            }
+
+            elementos.filterChips.innerHTML = "";
+
+            ["todos", ...categorias].forEach(categoria => {
+                const chip = document.createElement("button");
+
+                chip.type = "button";
+                chip.className = "chip";
+
+                chip.textContent =
+                    categoria === "todos"
+                        ? "Todos"
+                        : categoria;
+
+                if (filtroAtivo === categoria) {
+                    chip.classList.add("active");
+                }
+
+                chip.addEventListener("click", () => {
+                    filtroAtivo = categoria;
+
+                    renderizarFiltros();
+                    filtrarTabela();
+                });
+
+                elementos.filterChips.appendChild(chip);
+            });
+        }
+
+        // ======================================
+        // BUSCA
+        // ======================================
+
+        function filtrarTabela() {
+            const busca = elementos.buscaMed.value
+                .toLowerCase()
+                .trim();
+
+            const filtrados = estoqueGlobal.filter(m => {
+                const nome = String(m.nome || "").toLowerCase();
+
+                const categoria = String(
+                    m.categoria || ""
+                ).toLowerCase();
+
+                const correspondeCategoria =
+                    filtroAtivo === "todos" ||
+                    m.categoria === filtroAtivo;
+
+                const correspondeBusca =
+                    nome.includes(busca) ||
+                    categoria.includes(busca);
+
+                return (
+                    correspondeCategoria &&
+                    correspondeBusca
+                );
+            });
+
+            renderizarTabela(filtrados);
+        }
+
+        elementos.buscaMed.addEventListener(
+            "input",
+            filtrarTabela
+        );
+
+        // ======================================
+        // SITUAÇÃO DO ESTOQUE
+        // ======================================
+
+        function getStockClass(quantidade) {
+            const qtd = Number(quantidade);
+
+            if (qtd <= 0) return "stock-empty";
+            if (qtd <= 5) return "stock-critical";
+            if (qtd <= 10) return "stock-low";
+
+            return "stock-ok";
+        }
+
+        function getStockIcon(quantidade) {
+            const qtd = Number(quantidade);
+
+            if (qtd <= 0) return "🛑";
+            if (qtd <= 5) return "🔴";
+            if (qtd <= 10) return "🟡";
+
+            return "🟢";
+        }
+
+        // ======================================
+        // TABELA DE ESTOQUE
+        // ======================================
+
+        function renderizarTabela(data) {
+            if (!data.length) {
+                elementos.tabelaEstoque.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <div class="empty-icon">📫</div>
+                                Nenhum medicamento encontrado.
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
                 return;
             }
 
-            if (botao.dataset.action === "editar") {
-                abrirModalEditar(medicamento);
-            } else {
-                removerMedicamento(medicamento);
-            }
-        });
-    });
-}
+            elementos.tabelaEstoque.innerHTML = data.map(m => {
+                const nome = escaparHTML(m.nome);
+                const categoria = escaparHTML(
+                    m.categoria || "-"
+                );
 
-// ======================================
-// CADASTRAR MEDICAMENTO
-// ======================================
+                const unidade = escaparHTML(
+                    m.unidade || "-"
+                );
 
-async function darEntrada() {
-    const nome = document.getElementById("emNome").value.trim();
-    const qtd = Number(document.getElementById("emQtd").value);
-    const unidade = document.getElementById("emUnidade").value;
-    const categoria = document.getElementById("emCategoria").value;
+                const qtd = Number(m.quantidade) || 0;
+                const id = escaparHTML(m.id);
 
-    if (!nome) {
-        showToast("Digite o nome do medicamento.", "warning");
-        return;
-    }
+                return `
+                    <tr>
+                        <td>
+                            <div class="med-name">
+                                ${nome}
+                            </div>
+                        </td>
 
-    if (!quantidadeValida(qtd)) {
-        showToast("Informe uma quantidade inteira maior que zero.", "warning");
-        return;
-    }
+                        <td>
+                            <div class="med-cat">
+                                ${categoria}
+                            </div>
+                        </td>
 
-    try {
-        const dados = await requisicao(API_ESTOQUE, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                nome,
-                quantidade: qtd,
-                unidade,
-                categoria,
-                responsavel: nomeResponsavel()
-            })
-        });
+                        <td>
+                            <span class="stock-badge ${getStockClass(qtd)}">
+                                ${getStockIcon(qtd)} ${qtd}
+                            </span>
+                        </td>
 
-        document.getElementById("emNome").value = "";
-        document.getElementById("emQtd").value = "10";
+                        <td>${unidade}</td>
 
-        showToast(dados.mensagem || "Medicamento cadastrado!", "success");
+                        <td>
+                            <div class="action-row">
 
-        await Promise.all([
-            carregarEstoque(),
-            carregarHistorico()
-        ]);
+                                <button
+                                    type="button"
+                                    class="btn-sm btn-success"
+                                    data-action="editar"
+                                    data-id="${id}">
 
-    } catch (erro) {
-        console.error(erro);
-        showToast(erro.message, "error");
-    }
-}
+                                    Editar
 
-document.getElementById("btnCadastrar")
-    .addEventListener("click", darEntrada);
+                                </button>
 
-// ======================================
-// SELECT DE REPOSIÇÃO
-// ======================================
+                                <button
+                                    type="button"
+                                    class="btn-sm btn-danger-sm"
+                                    data-action="remover"
+                                    data-id="${id}">
 
-function preencherSelectRepor() {
-    const select = elementos.selReporMed;
-    const valorAnterior = select.value;
+                                    Excluir
 
-    select.innerHTML = '<option value="">-- Selecione --</option>';
+                                </button>
 
-    estoqueGlobal.forEach(m => {
-        const option = document.createElement("option");
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
 
-        option.value = m.id;
-        option.textContent =
-            `${m.nome} (atual: ${m.quantidade} ${m.unidade || ""})`;
+            elementos.tabelaEstoque
+                .querySelectorAll("[data-action]")
+                .forEach(botao => {
+                    botao.addEventListener("click", () => {
+                        const id = botao.dataset.id;
 
-        select.appendChild(option);
-    });
+                        const medicamento = estoqueGlobal.find(
+                            m => String(m.id) === String(id)
+                        );
 
-    if (estoqueGlobal.some(m => String(m.id) === valorAnterior)) {
-        select.value = valorAnterior;
-    }
-}
+                        if (!medicamento) {
+                            showToast(
+                                "Medicamento não encontrado.",
+                                "error"
+                            );
 
-// ======================================
-// REPOR ESTOQUE
-// ======================================
+                            return;
+                        }
 
-async function reporEstoque() {
-    const id = elementos.selReporMed.value;
-    const qtd = Number(document.getElementById("reporQtd").value);
-    const observacao = document.getElementById("reporObs").value.trim();
+                        if (botao.dataset.action === "editar") {
+                            abrirModalEditar(medicamento);
 
-    if (!id) {
-        showToast("Selecione um medicamento.", "warning");
-        return;
-    }
-
-    if (!quantidadeValida(qtd)) {
-        showToast("Informe uma quantidade inteira maior que zero.", "warning");
-        return;
-    }
-
-    try {
-        const dados = await requisicao(
-            `${API_ESTOQUE}/${encodeURIComponent(id)}`,
-            {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    quantidade: qtd,
-                    observacao,
-                    responsavel: nomeResponsavel()
-                })
-            }
-        );
-
-        document.getElementById("reporQtd").value = "10";
-        document.getElementById("reporObs").value = "";
-
-        showToast(dados.mensagem || "Estoque reposto!", "success");
-
-        await Promise.all([
-            carregarEstoque(),
-            carregarHistorico()
-        ]);
-
-    } catch (erro) {
-        console.error(erro);
-        showToast(erro.message, "error");
-    }
-}
-
-document.getElementById("btnRepor")
-    .addEventListener("click", reporEstoque);
-
-// ======================================
-// MODAL DE EDIÇÃO
-// ======================================
-
-function abrirModalEditar(medicamento) {
-    editandoId = medicamento.id;
-
-    elementos.modalMedNome.textContent =
-        `${medicamento.nome} — Estoque atual: ${medicamento.quantidade} ${medicamento.unidade || ""}`;
-
-    elementos.modalQtd.value = "";
-
-    elementos.modalEditar.classList.add("open");
-    elementos.modalQtd.focus();
-}
-
-function fecharModal() {
-    elementos.modalEditar.classList.remove("open");
-    editandoId = null;
-}
-
-document.getElementById("btnCancelarEdicao")
-    .addEventListener("click", fecharModal);
-
-elementos.modalEditar.addEventListener("click", evento => {
-    if (evento.target === elementos.modalEditar) {
-        fecharModal();
-    }
-});
-
-document.addEventListener("keydown", evento => {
-    if (evento.key === "Escape") {
-        fecharModal();
-    }
-});
-
-// ======================================
-// CONFIRMAR EDIÇÃO
-// ======================================
-
-async function confirmarEdicao() {
-    if (editandoId === null) {
-        showToast("Nenhum medicamento selecionado.", "warning");
-        return;
-    }
-
-    const qtd = Number(elementos.modalQtd.value);
-
-    if (!quantidadeValida(qtd, true)) {
-        showToast("Digite um número inteiro diferente de zero.", "warning");
-        return;
-    }
-
-    try {
-        const dados = await requisicao(
-            `${API_ESTOQUE}/${encodeURIComponent(editandoId)}`,
-            {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    quantidade: qtd,
-                    responsavel: nomeResponsavel(),
-                    observacao: "Movimentação manual pelo formulário de edição"
-                })
-            }
-        );
-
-        fecharModal();
-
-        showToast(dados.mensagem || "Estoque atualizado!", "success");
-
-        await Promise.all([
-            carregarEstoque(),
-            carregarHistorico()
-        ]);
-
-    } catch (erro) {
-        console.error(erro);
-        showToast(erro.message, "error");
-    }
-}
-
-document.getElementById("btnConfirmarEdicao")
-    .addEventListener("click", confirmarEdicao);
-
-// ======================================
-// EXCLUIR MEDICAMENTO
-// ======================================
-
-async function removerMedicamento(medicamento) {
-    const confirmar = window.confirm(
-        `Deseja realmente excluir "${medicamento.nome}" do estoque?`
-    );
-
-    if (!confirmar) return;
-
-    try {
-        const dados = await requisicao(
-            `${API_ESTOQUE}/${encodeURIComponent(medicamento.id)}`,
-            {
-                method: "DELETE"
-            }
-        );
-
-        showToast(dados.mensagem || "Medicamento excluído!", "success");
-
-        await Promise.all([
-            carregarEstoque(),
-            carregarHistorico()
-        ]);
-
-    } catch (erro) {
-        console.error(erro);
-        showToast(erro.message, "error");
-    }
-}
-
-// ======================================
-// HISTÓRICO
-// ======================================
-
-async function carregarHistorico() {
-    try {
-        const dados = await requisicao(`${API_ESTOQUE}/historico`);
-
-        if (!Array.isArray(dados)) {
-            throw new Error("O histórico retornado é inválido.");
+                        } else {
+                            removerMedicamento(medicamento);
+                        }
+                    });
+                });
         }
 
-        historicoGlobal = dados;
-        renderizarHistorico();
+        // ======================================
+        // CADASTRAR MEDICAMENTO
+        // ======================================
 
-    } catch (erro) {
-        console.error("Erro ao carregar histórico:", erro);
+        async function darEntrada() {
+            const nome = document
+                .getElementById("emNome")
+                .value.trim();
 
-        elementos.historicoEntradas.innerHTML = `
-            <div class="empty-state">
-                Não foi possível carregar o histórico.
-            </div>
-        `;
-    }
-}
+            const qtd = Number(
+                document.getElementById("emQtd").value
+            );
 
-function renderizarHistorico() {
-    if (!historicoGlobal.length) {
-        elementos.historicoEntradas.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">📖</div>
-                Nenhuma movimentação registrada.
-            </div>
-        `;
-        return;
-    }
+            const unidade =
+                document.getElementById("emUnidade").value;
 
-    elementos.historicoEntradas.innerHTML =
-        historicoGlobal.slice(0, 20).map(item => {
-            let icone = "📦";
-            let sinal = "";
-            let classeQuantidade = "hist-qty-pos";
-            let descricao = "Movimentação";
+            const categoria =
+                document.getElementById("emCategoria").value;
 
-            if (item.tipo === "cadastro") {
-                icone = "📩";
-                sinal = "+";
-                descricao = "Novo cadastro";
-            } else if (item.tipo === "entrada") {
-                icone = "📥";
-                sinal = "+";
-                descricao = "Reposição";
-            } else if (item.tipo === "retirada") {
-                icone = "📤";
-                sinal = "-";
-                classeQuantidade = "hist-qty-neg";
-                descricao = "Retirada";
-            } else if (item.tipo === "exclusao") {
-                icone = "🗑️";
-                descricao = "Exclusão";
-                classeQuantidade = "hist-qty-neg";
-                sinal = "-";
+            if (!nome) {
+                showToast(
+                    "Digite o nome do medicamento.",
+                    "warning"
+                );
+
+                return;
             }
 
-            const observacao = item.observacao
-                ? ` · ${escaparHTML(item.observacao)}`
-                : "";
+            if (!quantidadeValida(qtd)) {
+                showToast(
+                    "Informe uma quantidade inteira maior que zero.",
+                    "warning"
+                );
 
-            return `
-                <div class="hist-item">
+                return;
+            }
 
-                    <div class="hist-icon">${icone}</div>
+            try {
+                const dados = await requisicao(API_ESTOQUE, {
+                    method: "POST",
 
-                    <div class="hist-info">
-                        <div class="hist-med">
-                            ${escaparHTML(item.nome)}
-                        </div>
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-                        <div class="hist-sub">
-                            ${descricao} · ${formatarData(item.data)}
-                            <br>
-                            Responsável: ${escaparHTML(item.responsavel || "Almoxarifado")}
-                            ${observacao}
-                        </div>
+                    body: JSON.stringify({
+                        nome,
+                        quantidade: qtd,
+                        unidade,
+                        categoria,
+                        responsavel: nomeResponsavel()
+                    })
+                });
+
+                document.getElementById("emNome").value = "";
+                document.getElementById("emQtd").value = "10";
+
+                showToast(
+                    dados.mensagem || "Medicamento cadastrado!",
+                    "success"
+                );
+
+                await Promise.all([
+                    carregarEstoque(),
+                    carregarHistorico()
+                ]);
+
+            } catch (erro) {
+                console.error("Erro ao cadastrar:", erro);
+
+                showToast(erro.message, "error");
+            }
+        }
+
+        document
+            .getElementById("btnCadastrar")
+            .addEventListener("click", darEntrada);
+
+        // ======================================
+        // SELECT DE REPOSIÇÃO
+        // ======================================
+
+        function preencherSelectRepor() {
+            const select = elementos.selReporMed;
+            const valorAnterior = select.value;
+
+            select.innerHTML =
+                '<option value="">-- Selecione --</option>';
+
+            estoqueGlobal.forEach(m => {
+                const option = document.createElement("option");
+
+                option.value = m.id;
+
+                option.textContent =
+                    `${m.nome} (atual: ${m.quantidade} ${m.unidade || ""})`;
+
+                select.appendChild(option);
+            });
+
+            if (
+                estoqueGlobal.some(
+                    m => String(m.id) === valorAnterior
+                )
+            ) {
+                select.value = valorAnterior;
+            }
+        }
+
+        // ======================================
+        // REPOR ESTOQUE
+        // ======================================
+
+        async function reporEstoque() {
+            const id = elementos.selReporMed.value;
+
+            const qtd = Number(
+                document.getElementById("reporQtd").value
+            );
+
+            const observacao = document
+                .getElementById("reporObs")
+                .value.trim();
+
+            if (!id) {
+                showToast(
+                    "Selecione um medicamento.",
+                    "warning"
+                );
+
+                return;
+            }
+
+            if (!quantidadeValida(qtd)) {
+                showToast(
+                    "Informe uma quantidade inteira maior que zero.",
+                    "warning"
+                );
+
+                return;
+            }
+
+            try {
+                const dados = await requisicao(
+                    `${API_ESTOQUE}/${encodeURIComponent(id)}`,
+                    {
+                        method: "PATCH",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            quantidade: qtd,
+                            observacao,
+                            responsavel: nomeResponsavel()
+                        })
+                    }
+                );
+
+                document.getElementById("reporQtd").value = "10";
+                document.getElementById("reporObs").value = "";
+
+                showToast(
+                    dados.mensagem || "Estoque reposto!",
+                    "success"
+                );
+
+                await Promise.all([
+                    carregarEstoque(),
+                    carregarHistorico()
+                ]);
+
+            } catch (erro) {
+                console.error("Erro ao repor:", erro);
+
+                showToast(erro.message, "error");
+            }
+        }
+
+        document
+            .getElementById("btnRepor")
+            .addEventListener("click", reporEstoque);
+
+        // ======================================
+        // MODAL DE EDIÇÃO
+        // ======================================
+
+        function abrirModalEditar(medicamento) {
+            editandoId = medicamento.id;
+
+            elementos.modalMedNome.textContent =
+                `${medicamento.nome} — Estoque atual: ${medicamento.quantidade} ${medicamento.unidade || ""}`;
+
+            elementos.modalQtd.value = "";
+
+            elementos.modalEditar.classList.add("open");
+
+            elementos.modalQtd.focus();
+        }
+
+        function fecharModal() {
+            elementos.modalEditar.classList.remove("open");
+
+            editandoId = null;
+        }
+
+        document
+            .getElementById("btnCancelarEdicao")
+            .addEventListener("click", fecharModal);
+
+        elementos.modalEditar.addEventListener("click", evento => {
+            if (evento.target === elementos.modalEditar) {
+                fecharModal();
+            }
+        });
+
+        document.addEventListener("keydown", evento => {
+            if (evento.key === "Escape") {
+                fecharModal();
+            }
+        });
+
+        // ======================================
+        // CONFIRMAR EDIÇÃO
+        // ======================================
+
+        async function confirmarEdicao() {
+            if (editandoId === null) {
+                showToast(
+                    "Nenhum medicamento selecionado.",
+                    "warning"
+                );
+
+                return;
+            }
+
+            const qtd = Number(elementos.modalQtd.value);
+
+            if (!quantidadeValida(qtd, true)) {
+                showToast(
+                    "Digite um número inteiro diferente de zero.",
+                    "warning"
+                );
+
+                return;
+            }
+
+            try {
+                const dados = await requisicao(
+                    `${API_ESTOQUE}/${encodeURIComponent(editandoId)}`,
+                    {
+                        method: "PATCH",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            quantidade: qtd,
+                            responsavel: nomeResponsavel(),
+                            observacao:
+                                "Movimentação manual pelo formulário de edição"
+                        })
+                    }
+                );
+
+                fecharModal();
+
+                showToast(
+                    dados.mensagem || "Estoque atualizado!",
+                    "success"
+                );
+
+                await Promise.all([
+                    carregarEstoque(),
+                    carregarHistorico()
+                ]);
+
+            } catch (erro) {
+                console.error("Erro ao editar:", erro);
+
+                showToast(erro.message, "error");
+            }
+        }
+
+        document
+            .getElementById("btnConfirmarEdicao")
+            .addEventListener("click", confirmarEdicao);
+
+        // ======================================
+        // EXCLUIR MEDICAMENTO
+        // ======================================
+
+        async function removerMedicamento(medicamento) {
+            const confirmar = window.confirm(
+                `Deseja realmente excluir "${medicamento.nome}" do estoque?`
+            );
+
+            if (!confirmar) {
+                return;
+            }
+
+            try {
+                const dados = await requisicao(
+                    `${API_ESTOQUE}/${encodeURIComponent(medicamento.id)}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+                showToast(
+                    dados.mensagem || "Medicamento excluído!",
+                    "success"
+                );
+
+                await Promise.all([
+                    carregarEstoque(),
+                    carregarHistorico()
+                ]);
+
+            } catch (erro) {
+                console.error("Erro ao excluir:", erro);
+
+                showToast(erro.message, "error");
+            }
+        }
+
+        // ======================================
+        // CARREGAR HISTÓRICO
+        // ======================================
+
+        async function carregarHistorico() {
+            try {
+                const dados = await requisicao(
+                    `${API_ESTOQUE}/historico`
+                );
+
+                if (!Array.isArray(dados)) {
+                    throw new Error(
+                        "O histórico retornado pelo servidor é inválido."
+                    );
+                }
+
+                historicoGlobal = dados;
+
+                renderizarHistorico();
+
+            } catch (erro) {
+                console.error(
+                    "Erro ao carregar histórico:",
+                    erro
+                );
+
+                elementos.historicoEntradas.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+
+                        Não foi possível carregar o histórico.
+
+                        <br><br>
+
+                        <small>
+                            ${escaparHTML(erro.message)}
+                        </small>
                     </div>
+                `;
+            }
+        }
 
-                    <div class="${classeQuantidade}">
-                        ${sinal}${escaparHTML(item.quantidade)}
-                        <br>
-                        <small>${escaparHTML(item.unidade || "")}</small>
+        // ======================================
+        // RENDERIZAR HISTÓRICO
+        // ======================================
+
+        function renderizarHistorico() {
+            if (!historicoGlobal.length) {
+                elementos.historicoEntradas.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📖</div>
+                        Nenhuma movimentação registrada.
                     </div>
+                `;
 
-                </div>
-            `;
-        }).join("");
-}
+                return;
+            }
 
-// ======================================
-// BOTÕES DE ATUALIZAÇÃO
-// ======================================
+            elementos.historicoEntradas.innerHTML =
+                historicoGlobal.slice(0, 20).map(item => {
+                    let icone = "📦";
+                    let sinal = "";
+                    let classeQuantidade = "hist-qty-pos";
+                    let descricao = "Movimentação";
 
-document.getElementById("btnAtualizar")
-    .addEventListener("click", carregarEstoque);
+                    if (item.tipo === "cadastro") {
+                        icone = "📩";
+                        sinal = "+";
+                        descricao = "Novo cadastro";
 
-document.getElementById("btnAtualizarHistorico")
-    .addEventListener("click", carregarHistorico);
+                    } else if (item.tipo === "entrada") {
+                        icone = "📥";
+                        sinal = "+";
+                        descricao = "Reposição";
 
-// ======================================
-// INICIALIZAÇÃO
-// ======================================
+                    } else if (item.tipo === "retirada") {
+                        icone = "📤";
+                        sinal = "-";
+                        classeQuantidade = "hist-qty-neg";
+                        descricao = "Retirada";
 
-async function iniciarAlmoxarifado() {
-    await Promise.all([
-        carregarEstoque(),
-        carregarHistorico()
-    ]);
-}
+                    } else if (item.tipo === "exclusao") {
+                        icone = "🗑️";
+                        descricao = "Exclusão";
+                        classeQuantidade = "hist-qty-neg";
+                        sinal = "-";
+                    }
 
-iniciarAlmoxarifado();
+                    const observacao = item.observacao
+                        ? ` · ${escaparHTML(item.observacao)}`
+                        : "";
 
-</script>
+                    return `
+                        <div class="hist-item">
+
+                            <div class="hist-icon">
+                                ${icone}
+                            </div>
+
+                            <div class="hist-info">
+
+                                <div class="hist-med">
+                                    ${escaparHTML(item.nome)}
+                                </div>
+
+                                <div class="hist-sub">
+
+                                    ${descricao} ·
+                                    ${formatarData(item.data)}
+
+                                    <br>
+
+                                    Responsável:
+                                    ${escaparHTML(item.responsavel || "Almoxarifado")}
+
+                                    ${observacao}
+
+                                </div>
+
+                            </div>
+
+                            <div class="${classeQuantidade}">
+
+                                ${sinal}${escaparHTML(item.quantidade)}
+
+                                <br>
+
+                                <small>
+                                    ${escaparHTML(item.unidade || "")}
+                                </small>
+
+                            </div>
+
+                        </div>
+                    `;
+                }).join("");
+        }
+
+        // ======================================
+        // BOTÕES DE ATUALIZAÇÃO
+        // ======================================
+
+        document
+            .getElementById("btnAtualizar")
+            .addEventListener("click", carregarEstoque);
+
+        document
+            .getElementById("btnAtualizarHistorico")
+            .addEventListener("click", carregarHistorico);
+
+        // ======================================
+        // INICIALIZAÇÃO
+        // ======================================
+
+        async function iniciarAlmoxarifado() {
+            await Promise.all([
+                carregarEstoque(),
+                carregarHistorico()
+            ]);
+        }
+
+        iniciarAlmoxarifado();
+
+    </script>
 
 </body>
 </html>
-
