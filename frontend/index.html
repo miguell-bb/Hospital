@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,17 +9,31 @@
 </head>
 <body>
   <div class="container">
-    <h2>🏥 HSC - Hospital Sabrina Carpenter
-    </h2>
+    <h2>🏥 HSC - Hospital Sabrina Carpenter</h2>
 
-    <input id="usuario" placeholder="Usuário" autocomplete="username">
-    <input id="senha" type="password" placeholder="Senha" autocomplete="current-password">
+    <input
+      id="usuario"
+      placeholder="Usuário"
+      autocomplete="username"
+    >
 
-    <button type="button" id="btnEntrar" onclick="login()">Entrar</button>
+    <input
+      id="senha"
+      type="password"
+      placeholder="Senha"
+      autocomplete="current-password"
+    >
+
+    <button type="button" id="btnEntrar" onclick="login()">
+      Entrar
+    </button>
+
     <p id="mensagem" role="status"></p>
   </div>
 
   <script>
+    const API_URL = "http://localhost:3000";
+
     async function login() {
       const usuario = document.getElementById("usuario").value.trim();
       const senha = document.getElementById("senha").value;
@@ -26,15 +41,15 @@
       const botao = document.getElementById("btnEntrar");
 
       if (!usuario || !senha) {
-        alert("Preencha o usuário e a senha.");
+        mensagem.textContent = "Preencha o usuário e a senha.";
         return;
       }
 
       botao.disabled = true;
-      mensagem.textContent = "Entrando...";
+      mensagem.textContent = "Verificando acesso...";
 
       try {
-        const resposta = await fetch("/login", {
+        const resposta = await fetch(`${API_URL}/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -43,41 +58,58 @@
         });
 
         const texto = await resposta.text();
+
         let dados;
 
         try {
           dados = JSON.parse(texto);
         } catch {
           throw new Error(
-            "O servidor não retornou JSON válido. Verifique se o backend está funcionando."
+            `Resposta inválida do servidor (HTTP ${resposta.status}).`
           );
         }
 
         if (!resposta.ok) {
-          throw new Error(dados.erro || "Falha no login.");
+          throw new Error(dados.erro || "Usuário ou senha incorretos.");
         }
 
-        // Redirecionamento baseado no tipo de usuário
-        if (dados.tipo === "triagem") {
-          location.href = "triagem.html";
-        } else if (dados.tipo === "medico") {
-          location.href = "medico.html";
-        } else if (dados.tipo === "atendimento") {
-          location.href = "atendimento.html";
-        } else {
-          alert("Tipo de usuário não reconhecido.");
-          botao.disabled = false;
-          mensagem.textContent = "";
+        // Normaliza o tipo para evitar problemas com maiúsculas
+        const tipo = String(dados.tipo || "")
+          .trim()
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+
+        const paginas = {
+          triagem: "triagem.html",
+          medico: "medico.html",
+          atendimento: "atendimento.html"
+        };
+
+        const pagina = paginas[tipo];
+
+        if (!pagina) {
+          console.error("Tipo recebido do servidor:", dados.tipo);
+          throw new Error(
+            `Tipo de usuário não reconhecido: "${dados.tipo}". Confira o db.json.`
+          );
         }
+
+        mensagem.textContent = "Login realizado! Abrindo sistema...";
+
+        // Redireciona para a página dentro do servidor Express
+        window.location.replace(
+          `${API_URL}/${pagina}`
+        );
+
       } catch (erro) {
         console.error("Erro no login:", erro);
         mensagem.textContent = erro.message;
-        alert(erro.message || "Não foi possível conectar ao servidor.");
         botao.disabled = false;
       }
     }
 
-    // Permitir submeter pressionando Enter em qualquer um dos campos
+    // Login pressionando Enter
     document.getElementById("usuario").addEventListener("keydown", event => {
       if (event.key === "Enter") login();
     });
@@ -85,6 +117,15 @@
     document.getElementById("senha").addEventListener("keydown", event => {
       if (event.key === "Enter") login();
     });
+
+    // Atalho secreto: Ctrl  + Alt + A redireciona  para admin.html
+
+window.addEventListener("keydown", function(e) {
+  if (e.ctrlKey && e.altKey && (e.key === "a" || e.key === "A")) {
+    e.preventDefault();
+    window.location.href = "admin.html";
+  }
+});
   </script>
 </body>
 </html>
