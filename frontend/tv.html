@@ -7,127 +7,508 @@
   <title>Mídia Indoor - TV</title>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+   
+/* =========================================
+   HCA - MÍDIA INDOOR | HOSPITAL PREMIUM UI
+   Azul institucional, branco e amarelo
+========================================= */
 
-    body {
-      background-color: #5c4033;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
+:root {
+    --primary: #174A78;
+    --primary-dark: #10395F;
+    --primary-light: #2D79B5;
+
+    --blue-soft: #EAF3FA;
+    --blue-pale: #F4F8FC;
+
+    --yellow: #FFE99A;
+    --yellow-soft: #FFF8DC;
+    --yellow-dark: #D6B94F;
+
+    --white: #FFFFFF;
+    --text: #24364A;
+    --text-light: #64748B;
+
+    --border: #DCE6EF;
+    --shadow: 0 12px 35px rgba(16, 57, 95, 0.13);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, #2D79B5 0%, transparent 38%),
+        linear-gradient(135deg, #10395F, #174A78 55%, #0C2D4D);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 100vh;
+    overflow: hidden;
+
+    padding: 2.5vh 2.5vw;
+}
+
+/* =========================================
+   ESTRUTURA PRINCIPAL
+========================================= */
+
+.tv-container {
+    display: flex;
+    width: 100%;
+    height: 95vh;
+    gap: 20px;
+    max-width: 1900px;
+}
+
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    gap: 20px;
+    min-width: 0;
+}
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    width: 65%;
+    gap: 20px;
+    min-width: 0;
+}
+
+/* =========================================
+   CARDS
+========================================= */
+
+.box {
+    position: relative;
+
+    background: linear-gradient(
+        145deg,
+        #FFFFFF,
+        #F4F8FC
+    );
+
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 22px;
+
+    padding: 28px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+    overflow: hidden;
+}
+
+/* Detalhe amarelo superior */
+
+.box::before {
+    content: "";
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 7px;
+
+    background: linear-gradient(
+        90deg,
+        var(--primary),
+        var(--primary-light),
+        var(--yellow)
+    );
+}
+
+/* =========================================
+   TÍTULOS
+========================================= */
+
+.box-title {
+    color: var(--primary);
+
+    font-size: clamp(18px, 2.1vw, 36px);
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 2px;
+
+    margin-bottom: 18px;
+
+    text-shadow: none;
+}
+
+/* =========================================
+   PAINEL DO GUICHÊ
+========================================= */
+
+.local-box {
+    flex: 1;
+    background: linear-gradient(
+        145deg,
+        #FFFFFF,
+        #EAF3FA
+    );
+}
+
+.local-number {
+    color: var(--primary);
+
+    font-size: clamp(75px, 9vw, 155px);
+    font-weight: 900;
+
+    line-height: 1;
+
+    text-shadow: 0 5px 15px rgba(23, 74, 120, 0.12);
+}
+
+.local-type {
+    color: var(--text-light);
+
+    font-size: clamp(16px, 1.8vw, 28px);
+    font-weight: 800;
+
+    margin-top: 15px;
+    letter-spacing: 2px;
+}
+
+/* =========================================
+   HISTÓRICO DE CHAMADAS
+========================================= */
+
+.history-box {
+    flex: 1.1;
+
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    background: #FFFFFF;
+    padding: 25px;
+}
+
+.history-box .box-title {
+    font-size: clamp(16px, 1.7vw, 27px);
+
+    align-self: center;
+
+    width: 100%;
+    padding-bottom: 15px;
+
+    border-bottom: 2px solid var(--border);
+}
+
+#history-list {
+    list-style: none;
+
+    width: 100%;
+
+    color: var(--text);
+    font-size: clamp(13px, 1.35vw, 23px);
+
+    font-weight: 700;
+    text-align: left;
+}
+
+#history-list li {
+    position: relative;
+
+    margin-bottom: 12px;
+    padding: 12px 12px 12px 18px;
+
+    border-bottom: 1px solid var(--border);
+    border-radius: 8px;
+
+    background: var(--blue-pale);
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+#history-list li::before {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    top: 10%;
+    bottom: 10%;
+
+    width: 4px;
+
+    border-radius: 5px;
+    background: var(--yellow-dark);
+}
+
+/* =========================================
+   PAINEL DO PACIENTE
+========================================= */
+
+.patient-box {
+    flex: 3;
+
+    background: linear-gradient(
+        145deg,
+        #FFFFFF 0%,
+        #F4F8FC 100%
+    );
+
+    border: 3px solid rgba(255, 255, 255, 0.9);
+}
+
+.patient-box .box-title {
+    color: var(--primary);
+
+    font-size: clamp(22px, 2.5vw, 42px);
+
+    letter-spacing: 4px;
+
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--yellow);
+
+    width: 70%;
+}
+
+.patient-name {
+    color: var(--primary-dark);
+
+    font-size: clamp(40px, 6.5vw, 105px);
+    font-weight: 900;
+
+    line-height: 1.15;
+
+    word-break: break-word;
+    overflow-wrap: anywhere;
+
+    max-width: 100%;
+
+    text-shadow: 0 4px 15px rgba(23, 74, 120, 0.10);
+}
+
+/* =========================================
+   LOGO / IDENTIDADE DO SISTEMA
+========================================= */
+
+.logo-box {
+    flex: 1;
+
+    background: linear-gradient(
+        120deg,
+        #FFFFFF,
+        #EAF3FA
+    );
+
+    border: 2px solid var(--yellow);
+}
+
+.logo-text {
+    color: var(--primary);
+
+    font-size: clamp(22px, 3.5vw, 55px);
+    font-weight: 900;
+
+    text-transform: uppercase;
+    letter-spacing: 2px;
+
+    text-shadow: 0 3px 10px rgba(23, 74, 120, 0.10);
+}
+
+.logo-text::before {
+    content: "✚";
+    display: block;
+
+    color: var(--yellow-dark);
+
+    font-size: clamp(25px, 3vw, 45px);
+
+    margin-bottom: 8px;
+}
+
+/* =========================================
+   ANIMAÇÃO DE NOVA CHAMADA
+========================================= */
+
+@keyframes flash {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: var(--shadow);
     }
 
+    25% {
+        opacity: 0.65;
+        transform: scale(0.99);
+        box-shadow: 0 0 35px rgba(255, 233, 154, 0.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.01);
+        box-shadow: 0 0 45px rgba(255, 233, 154, 0.8);
+    }
+
+    75% {
+        opacity: 0.75;
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: var(--shadow);
+    }
+}
+
+.flash {
+    animation: flash 0.5s ease 3;
+}
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 900px) {
     .tv-container {
-      display: flex;
-      width: 95vw;
-      height: 90vh;
-      gap: 18px;
+        gap: 12px;
+        height: 92vh;
     }
 
-    .left-panel {
-      display: flex;
-      flex-direction: column;
-      width: 35%;
-      gap: 18px;
-    }
-
+    .left-panel,
     .right-panel {
-      display: flex;
-      flex-direction: column;
-      width: 65%;
-      gap: 18px;
+        gap: 12px;
     }
 
     .box {
-      background-color: #63d4f4;
-      border: 6px solid #b39b82;
-      border-radius: 15px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-
-    .box-title {
-      color: #ffffff;
-      font-size: 2.2vw;
-      font-weight: bold;
-      text-transform: uppercase;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-      margin-bottom: 12px;
-    }
-
-    .local-box { flex: 1; }
-
-    .local-number {
-      color: #d12c2c;
-      font-size: 9vw;
-      font-weight: bold;
-      line-height: 1;
-    }
-
-    .local-type {
-      color: #555;
-      font-size: 1.8vw;
-      font-weight: bold;
-      margin-top: 6px;
+        padding: 18px;
+        border-radius: 16px;
     }
 
     .history-box {
-      flex: 1;
-      justify-content: flex-start;
-      align-items: flex-start;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .tv-container {
+        flex-direction: column;
+        height: 96vh;
+        gap: 10px;
+    }
+
+    .left-panel,
+    .right-panel {
+        width: 100%;
+        gap: 10px;
+    }
+
+    .left-panel {
+        flex-direction: row;
+        height: 38%;
+    }
+
+    .right-panel {
+        height: 62%;
+    }
+
+    .local-box {
+        flex: 1;
+    }
+
+    .history-box {
+        flex: 1;
+    }
+
+    .patient-box {
+        flex: 2;
+    }
+
+    .logo-box {
+        flex: 0.7;
+    }
+
+    .box {
+        padding: 12px;
+        border-radius: 14px;
+    }
+
+    .box-title {
+        font-size: 14px;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .local-number {
+        font-size: 55px;
+    }
+
+    .local-type {
+        font-size: 12px;
     }
 
     .history-box .box-title {
-      font-size: 1.8vw;
-      align-self: center;
+        font-size: 12px;
     }
 
     #history-list {
-      list-style: none;
-      width: 100%;
-      color: #d12c2c;
-      font-size: 1.5vw;
-      font-weight: bold;
-      text-align: left;
+        font-size: 10px;
     }
 
     #history-list li {
-      margin-bottom: 8px;
-      border-bottom: 1px solid rgba(0,0,0,0.1);
-      padding-bottom: 5px;
+        padding: 6px 6px 6px 10px;
+        margin-bottom: 5px;
     }
-
-    .patient-box { flex: 3; }
 
     .patient-name {
-      color: #d12c2c;
-      font-size: 6.5vw;
-      font-weight: bold;
-      line-height: 1.2;
-      word-break: break-word;
+        font-size: clamp(25px, 8vw, 45px);
     }
 
-    .logo-box { flex: 1; }
+    .patient-box .box-title {
+        width: 90%;
+        font-size: 17px;
+    }
 
     .logo-text {
-      color: #8c3b7a;
-      font-size: 3.5vw;
-      font-weight: bold;
-      text-transform: uppercase;
+        font-size: 20px;
+    }
+}
+
+/* =========================================
+   TELAS GRANDES / TELEVISORES
+========================================= */
+
+@media (min-width: 1600px) {
+    .tv-container {
+        max-width: 2200px;
     }
 
-    @keyframes flash {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+    .box {
+        border-radius: 28px;
+        padding: 35px;
     }
+}
 
-    .flash { animation: flash 0.5s ease 3; }
   </style>
 </head>
 
